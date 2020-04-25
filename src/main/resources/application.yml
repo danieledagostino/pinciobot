@@ -2,10 +2,6 @@
 # = Pincio Web Service
 # ==============================================================
 
-spring:
-  application:
-    name: PincioBotService
-    
 
   
 
