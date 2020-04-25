@@ -22,13 +22,13 @@ public class Application
 	{
 		ApiContextInitializer.init();
 
-        TelegramBotsApi botsApi = new TelegramBotsApi();
-
-        try {
-            botsApi.registerBot(new FirstEntryPointController());
-        } catch (TelegramApiException e) {
-            logger.error("Registration hook error", e);
-        }
+//        TelegramBotsApi botsApi = new TelegramBotsApi();
+//
+//        try {
+//            botsApi.registerBot(new FirstEntryPointController());
+//        } catch (TelegramApiException e) {
+//            logger.error("Registration hook error", e);
+//        }
         
 		SpringApplication.run(Application.class, args);
 	}
