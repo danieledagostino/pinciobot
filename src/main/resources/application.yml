@@ -1,0 +1,15 @@
+# ==============================================================
+# = Pincio Web Service
+# ==============================================================
+
+bot:
+  token: test
+  username: test
+
+spring:
+  application:
+    name: PincioBotService
+    
+
+  
+
