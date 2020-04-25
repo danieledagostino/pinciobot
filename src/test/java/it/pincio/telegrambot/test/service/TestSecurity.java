@@ -4,11 +4,9 @@ package it.pincio.telegrambot.test.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.context.WebApplicationContext;
 
 import it.pincio.telegrambot.Application;
 
@@ -19,8 +17,8 @@ public class TestSecurity
 {
 //	private MockMvc mockMvc;
 	
-	@Autowired
-	private WebApplicationContext wac;
+//	@Autowired
+//	private WebApplicationContext wac;
 
 	@Before
 	public void setup()
