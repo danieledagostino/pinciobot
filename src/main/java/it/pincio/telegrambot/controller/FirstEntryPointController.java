@@ -36,7 +36,7 @@ public class FirstEntryPointController extends TelegramLongPollingBot {
 
 	@Override
 	public String getBotUsername() {
-		return "PincioBot";
+		return "NewPincioBot";
 	}
 
 	@Override
