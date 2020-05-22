@@ -28,14 +28,20 @@ public class FirstEntryPointController extends TelegramLongPollingBot {
 	@Value("${PERSISTENT_SERVICE}")
 	private String PERSISTENT_SERVICE;
 	
-	private String GET_UPDATE_METHOD = "/bot/search/";
+	@Value("${ELASTIC_SERVICE}")
+	private String ELASTIC_SERVICE;
+	
+	private String DB_SEARCH = "/bot/search/";
+	private String EL_INSERT = "/bot/elastic/insert/";
 
 	@Override
 	public void onUpdateReceived(Update update) {
 		if (update.hasMessage() && update.getMessage().hasText()) {
 	        try {
 	        	
-	            String result = restTemplate.getForObject(PERSISTENT_SERVICE+GET_UPDATE_METHOD, String.class, update.getMessage().getText());
+	            //String result = restTemplate.getForObject(PERSISTENT_SERVICE+GET_UPDATE_METHOD, String.class, update.getMessage().getText());
+	        	
+	        	String result = restTemplate.getForObject(ELASTIC_SERVICE+EL_INSERT, String.class, update.getMessage().getText());
 	        	
 	            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
 	            		.setChatId(update.getMessage().getChatId())
