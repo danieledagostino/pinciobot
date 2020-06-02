@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableAutoConfiguration
 public class AppConfiguration {
 	
-	@Value("BASIC_PW")
+	@Value("PINCIO_PASSWORD")
 	private String BASIC_PW;
 
 	@Bean
