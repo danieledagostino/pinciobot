@@ -1,5 +1,6 @@
 package it.pincio.telegrambot;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
@@ -11,9 +12,13 @@ import org.springframework.web.client.RestTemplate;
 @EnableEurekaClient
 @EnableAutoConfiguration
 public class AppConfiguration {
+	
+	@Value("BASIC_PW")
+	private String BASIC_PW;
 
 	@Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-       return builder.build();
-    }
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		return builder.basicAuthentication("pincio", BASIC_PW).build();
+	 }
+
 }

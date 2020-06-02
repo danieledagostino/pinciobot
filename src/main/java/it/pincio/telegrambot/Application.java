@@ -10,7 +10,7 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import it.pincio.telegrambot.controller.FirstEntryPointController;
+import it.pincio.telegrambot.controller.FirstEntryPointTelegramBot;
 
 @SpringBootApplication
 public class Application 
