@@ -1,11 +1,12 @@
 
 package it.pincio.telegrambot;
 
+import javax.annotation.PreDestroy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -17,19 +18,21 @@ public class Application
 {
 
 	private static final Logger logger = LoggerFactory.getLogger(Application.class);
+	private static TelegramBotsApi botsApi;
 	
 	public static void main(String[] args) 
 	{
 		ApiContextInitializer.init();
-
-//        TelegramBotsApi botsApi = new TelegramBotsApi();
+//
+//        botsApi = new TelegramBotsApi();
 //
 //        try {
-//            botsApi.registerBot(new FirstEntryPointController());
+//            botsApi.registerBot(new FirstEntryPointTelegramBot());
 //        } catch (TelegramApiException e) {
 //            logger.error("Registration hook error", e);
 //        }
         
 		SpringApplication.run(Application.class, args);
 	}
+	
 }
