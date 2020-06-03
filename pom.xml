@@ -36,16 +36,13 @@
 		<!-- https://github.com/rubenlagus/TelegramBots/blob/master/TelegramBots.wiki/Getting-Started.md -->
 		<dependency>
 			<groupId>org.telegram</groupId>
-			<artifactId>telegrambots-spring-boot-starter</artifactId>
+			<artifactId>telegrambots</artifactId>
 			<version>4.8.1</version>
 		</dependency>
 
 		<!-- https://github.com/rubenlagus/TelegramBots/tree/master/telegrambots-extensions -->
-		<!-- <dependency>
-			<groupId>org.telegram</groupId>
-			<artifactId>telegrambotsextensions</artifactId>
-			<version>4.8.1</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.telegram</groupId> <artifactId>telegrambotsextensions</artifactId> 
+			<version>4.8.1</version> </dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
