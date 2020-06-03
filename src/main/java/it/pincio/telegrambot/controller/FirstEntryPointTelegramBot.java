@@ -2,13 +2,12 @@ package it.pincio.telegrambot.controller;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -49,11 +48,21 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	            
 	            execute(message); // Call method to send the message
 	        } catch (TelegramApiException e) {
-	            e.printStackTrace();
+	            log.error("", e);
 	        }
 	    }
 		
 	}
+	
+	@PostConstruct
+    public void registerBot(){
+        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+        try {
+            telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
+        } catch (TelegramApiException e) {
+            log.error("", e);
+        }
+    }
 
 	@Override
 	public String getBotUsername() {
