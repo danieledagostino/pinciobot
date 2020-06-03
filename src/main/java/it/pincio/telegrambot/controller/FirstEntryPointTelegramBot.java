@@ -63,7 +63,7 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
         try {
             telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
         } catch (TelegramApiException e) {
-            log.error("", e);
+            log.error("Registration hook error");
         }
     }
 
