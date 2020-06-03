@@ -12,9 +12,11 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://user:password@localhost:5000}/eureka
 spring:
+  application:
+    name: telegrambot
   security:
     user:
-      password: ${eureka.password}
+      password: ${PINCIO_PASSWORD}
 ---
 spring:
   profiles: heroku
