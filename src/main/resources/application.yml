@@ -16,7 +16,7 @@ spring:
     name: telegrambot
   security:
     user:
-      password: ${PINCIO_PASSWORD}
+      password: ${PINCIO_PASSWORD:password}
 ---
 spring:
   profiles: heroku

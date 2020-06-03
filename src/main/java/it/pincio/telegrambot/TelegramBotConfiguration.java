@@ -17,9 +17,9 @@ import it.pincio.telegrambot.component.LoggingRequestInterceptor;
 @Configuration
 @EnableEurekaClient
 @EnableAutoConfiguration
-public class AppConfiguration {
+public class TelegramBotConfiguration {
 	
-	@Value("PINCIO_PASSWORD")
+	@Value("${spring.security.user.password}")
 	private String BASIC_PW;
 
 	@Bean
@@ -27,7 +27,7 @@ public class AppConfiguration {
 		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
 		interceptors.add(new LoggingRequestInterceptor());
 		
-		RestTemplate restTemplate = builder.basicAuthentication("pincio", BASIC_PW).build();
+		RestTemplate restTemplate = builder.basicAuthentication("user", BASIC_PW).build();
 		restTemplate.setInterceptors(interceptors);
 		
 		return restTemplate;

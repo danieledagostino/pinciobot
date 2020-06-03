@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,14 +41,12 @@ public class TestCallElasticServiceController {
 //	    @ApiResponse(code = 401, message = "Non sei AUTENTICATO")
 //	})
 	@PostMapping(value = "/bot/test", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> test(HttpServletRequest request)
+	public ResponseEntity<String> test(@RequestBody String question)
 		throws Exception	 
 	{
 		log.debug("****** Test call the elastic service *******");
 		
-		String question = request.getParameter("question");
-
-		restTemplate.getForEntity(ELASTIC_SERVICE+EL_INSERT, String.class, question);
+		restTemplate.put(ELASTIC_SERVICE+EL_INSERT, String.class, question);
 		
 		return new ResponseEntity<String>("OK", HttpStatus.OK);
 	} 
