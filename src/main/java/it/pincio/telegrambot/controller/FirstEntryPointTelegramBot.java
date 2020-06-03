@@ -40,15 +40,18 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	        	
 	            //String result = restTemplate.getForObject(PERSISTENT_SERVICE+GET_UPDATE_METHOD, String.class, update.getMessage().getText());
 	        	
-	        	//String result = restTemplate.getForObject(ELASTIC_SERVICE+EL_INSERT, String.class, update.getMessage().getText());
 	        	
 	            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
 	            		.setChatId(update.getMessage().getChatId())
-	            		.setText("Ciao il messaggio è"+update.getMessage().getText());
-	            
+	            		.setText("Elaboro la richiesta per: "+update.getMessage().getText());
 	            execute(message); // Call method to send the message
+	            
+	            String result = restTemplate.getForObject(ELASTIC_SERVICE+EL_INSERT, String.class, update.getMessage().getText());
+
 	        } catch (TelegramApiException e) {
-	            log.error("", e);
+	            log.warn("Probably message empty");
+	        } catch (Exception e) {
+	        	log.error("Generic comunication error", e);
 	        }
 	    }
 		
