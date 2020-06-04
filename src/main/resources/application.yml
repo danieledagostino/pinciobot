@@ -6,17 +6,7 @@ spring:
     active: "heroku"
 
 ---
-logging:
-  level:
-    ROOT: ERROR
-    org:
-      apache:
-        tomcat: DEBUG
-        catalina: DEBUG
-server:
-  tomcat:
-    accesslog:
-      enabled: true
+
 eureka:
   client:
     serviceUrl:
@@ -32,6 +22,21 @@ spring:
   security:
     user:
       password: ${PINCIO_PASSWORD:password}
+      
+---
+spring:
+  profiles: local
+logging:
+  level:
+    ROOT: ERROR
+    org:
+      apache:
+        tomcat: DEBUG
+        catalina: DEBUG
+server:
+  tomcat:
+    accesslog:
+      enabled: true
 ---
 spring:
   profiles: heroku

@@ -49,7 +49,7 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	        	
 	            //String result = restTemplate.getForObject(PERSISTENT_SERVICE+GET_UPDATE_METHOD, String.class, update.getMessage().getText());
 	        	
-	        	
+	        	log.info("******************* onUpdateReceived *******************");
 	            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
 	            		.setChatId(update.getMessage().getChatId())
 	            		.setText("Elaboro la richiesta per: "+update.getMessage().getText());

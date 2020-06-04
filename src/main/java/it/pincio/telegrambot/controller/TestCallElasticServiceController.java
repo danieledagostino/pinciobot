@@ -1,5 +1,7 @@
 package it.pincio.telegrambot.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,15 +51,17 @@ public class TestCallElasticServiceController {
 //	    @ApiResponse(code = 401, message = "Non sei AUTENTICATO")
 //	})
 	@PostMapping(value = "/bot/test", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> test(@RequestBody String question)
+	public ResponseEntity<String> test(@RequestBody List<String> questions)
 		throws Exception	 
 	{
 		log.debug("****** Test call the elastic service *******");
 		
 		JsonArray jsonArray = new JsonArray(1);
-		jsonArray.add(question);
+		for (String q : questions) {
+			jsonArray.add(q);
+		}
 		HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
-		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class, question);
+		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class);
 		
 		return response;
 	} 
