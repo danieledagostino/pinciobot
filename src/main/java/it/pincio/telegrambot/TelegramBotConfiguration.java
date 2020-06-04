@@ -29,6 +29,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import it.pincio.telegrambot.component.LoggingRequestInterceptor;
 import it.pincio.telegrambot.controller.FirstEntryPointTelegramBot;
+import it.pincio.telegrambot.controller.TestTelegramBot;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -98,8 +99,9 @@ public class TelegramBotConfiguration {
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
             telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
+            telegramBotsApi.registerBot(new TestTelegramBot());
         } catch (TelegramApiException e) {
-            log.error("Registration hook error");
+            log.error("******************* Registration hook error *******************");
         }
 		
 		log.info("******************* ApiContextInitializer.init() *******************");
