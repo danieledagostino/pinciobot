@@ -4,6 +4,10 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -11,6 +15,8 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import com.google.gson.JsonArray;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +26,9 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private HttpHeaders httpHeaders;
 	
 	@Value("${PINCIO_BOT_TOKEN}")
 	private String TOKEN;
@@ -46,8 +55,13 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	            		.setText("Elaboro la richiesta per: "+update.getMessage().getText());
 	            execute(message); // Call method to send the message
 	            
-	            String result = restTemplate.getForObject(ELASTIC_SERVICE+EL_INSERT, String.class, update.getMessage().getText());
-
+	            if (update.getMessage().getText().contains("?"))
+	            {
+		            JsonArray jsonArray = new JsonArray(1);
+		    		jsonArray.add(update.getMessage().getText());
+		    		HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
+		    		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class);
+	            }
 	        } catch (TelegramApiException e) {
 	            log.warn("Probably message empty");
 	        } catch (Exception e) {

@@ -4,6 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,9 @@ public class TestCallElasticServiceController {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private HttpHeaders httpHeaders;
 	
 	@Value("${ELASTIC_SERVICE}")
 	private String ELASTIC_SERVICE;
@@ -46,8 +52,9 @@ public class TestCallElasticServiceController {
 	{
 		log.debug("****** Test call the elastic service *******");
 		
-		restTemplate.put(ELASTIC_SERVICE+EL_INSERT, String.class, question);
+		HttpEntity<String> request = new HttpEntity<>("Headers", httpHeaders);
+		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class, question);
 		
-		return new ResponseEntity<String>("OK", HttpStatus.OK);
+		return response;
 	} 
 }

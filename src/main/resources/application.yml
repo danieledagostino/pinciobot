@@ -6,11 +6,26 @@ spring:
     active: "heroku"
 
 ---
-
+logging:
+  level:
+    ROOT: ERROR
+    org:
+      apache:
+        tomcat: DEBUG
+        catalina: DEBUG
+server:
+  tomcat:
+    accesslog:
+      enabled: true
 eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://user:password@localhost:5000}/eureka
+    fetch-registry: true
+  instance:
+    hostname: ${DOMAIN_NAME:localhost}
+    nonSecurePort: 80
+  password: ${EUREKA_USER_PASSWORD:password}
 spring:
   application:
     name: telegrambot
@@ -20,9 +35,5 @@ spring:
 ---
 spring:
   profiles: heroku
-eureka:
-  instance:
-    hostname: ${DOMAIN_NAME:localhost}
-    nonSecurePort: 80
-  password: ${EUREKA_USER_PASSWORD:password}
+  
   
