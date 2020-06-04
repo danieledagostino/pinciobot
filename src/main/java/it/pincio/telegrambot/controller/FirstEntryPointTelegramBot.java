@@ -73,6 +73,7 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	
 	@PostConstruct
     public void registerBot(){
+		log.debug("token: {}", TOKEN);
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
             telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
@@ -89,10 +90,5 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	@Override
 	public String getBotToken() {
 		return TOKEN;
-	}
-
-	@PostConstruct
-	public void start() {
-		log.debug("token: {}", TOKEN);
 	}
 }
