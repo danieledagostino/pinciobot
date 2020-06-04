@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.JsonArray;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +54,9 @@ public class TestCallElasticServiceController {
 	{
 		log.debug("****** Test call the elastic service *******");
 		
-		HttpEntity<String> request = new HttpEntity<>("Headers", httpHeaders);
+		JsonArray jsonArray = new JsonArray(1);
+		jsonArray.add(question);
+		HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
 		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class, question);
 		
 		return response;

@@ -55,13 +55,13 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	            		.setText("Elaboro la richiesta per: "+update.getMessage().getText());
 	            execute(message); // Call method to send the message
 	            
-	            if (update.getMessage().getText().contains("?"))
-	            {
-		            JsonArray jsonArray = new JsonArray(1);
-		    		jsonArray.add(update.getMessage().getText());
-		    		HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
-		    		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class);
-	            }
+//	            if (update.getMessage().getText().contains("?"))
+//	            {
+//		            JsonArray jsonArray = new JsonArray(1);
+//		    		jsonArray.add(update.getMessage().getText());
+//		    		HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
+//		    		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class);
+//	            }
 	        } catch (TelegramApiException e) {
 	            log.warn("Probably message empty");
 	        } catch (Exception e) {
