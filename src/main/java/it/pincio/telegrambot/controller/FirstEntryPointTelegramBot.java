@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -53,18 +52,21 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
 	            		.setChatId(update.getMessage().getChatId())
 	            		.setText("Elaboro la richiesta per: "+update.getMessage().getText());
-	            execute(message); // Call method to send the message
+	            //execute(message); // Call method to send the message
 	            
-//	            if (update.getMessage().getText().contains("?"))
-//	            {
-//		            JsonArray jsonArray = new JsonArray(1);
-//		    		jsonArray.add(update.getMessage().getText());
-//		    		HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
-//		    		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class);
-//	            }
-	        } catch (TelegramApiException e) {
-	            log.warn("Probably message empty");
-	        } catch (Exception e) {
+	            if (update.getMessage().getText().contains("?"))
+	            {
+		            JsonArray jsonArray = new JsonArray(1);
+		    		jsonArray.add(update.getMessage().getText());
+		    		HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
+		    		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class);
+	            }
+	        } 
+//	        catch (TelegramApiException e) 
+//	        {
+//	            log.warn("Probably message empty");
+//	        } 
+	        catch (Exception e) {
 	        	log.error("Generic comunication error", e);
 	        }
 	    }
