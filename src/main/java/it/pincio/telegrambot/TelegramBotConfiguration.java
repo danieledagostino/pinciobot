@@ -24,13 +24,18 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.ApiContextInitializer;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import it.pincio.telegrambot.component.LoggingRequestInterceptor;
+import it.pincio.telegrambot.controller.FirstEntryPointTelegramBot;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableEurekaClient
 @EnableAutoConfiguration
 @SpringBootApplication
+@Slf4j
 public class TelegramBotConfiguration {
 
 	@Value("${spring.security.user.password}")
@@ -90,6 +95,14 @@ public class TelegramBotConfiguration {
 	{
 		ApiContextInitializer.init();
 		
+		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+        try {
+            telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
+        } catch (TelegramApiException e) {
+            log.error("Registration hook error");
+        }
+		
+		log.info("******************* ApiContextInitializer.init() *******************");
 		SpringApplication.run(TelegramBotConfiguration.class, args);
 	}
 }

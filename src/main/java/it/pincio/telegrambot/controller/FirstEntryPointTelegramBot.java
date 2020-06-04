@@ -74,12 +74,6 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	@PostConstruct
     public void registerBot(){
 		log.debug("token: {}", TOKEN);
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-        try {
-            telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
-        } catch (TelegramApiException e) {
-            log.error("Registration hook error");
-        }
     }
 
 	@Override
