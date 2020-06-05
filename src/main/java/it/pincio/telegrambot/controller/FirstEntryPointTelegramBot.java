@@ -1,5 +1,10 @@
 package it.pincio.telegrambot.controller;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,70 +18,114 @@ import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
 public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private HttpHeaders httpHeaders;
-	
+
 	@Value("${PINCIO_BOT_TOKEN}")
 	private String TOKEN;
-	
-	@Value("${PERSISTENT_SERVICE}")
-	private String PERSISTENT_SERVICE;
-	
-	@Value("${ELASTIC_SERVICE}")
-	private String ELASTIC_SERVICE;
-	
+
+//	@Value("${PERSISTENT_SERVICE}")
+//	private String PERSISTENT_SERVICE;
+//
+//	@Value("${ELASTIC_SERVICE}")
+//	private String ELASTIC_SERVICE;
+
+	@Value("${CLOUDAMQP_APIKEY}")
+	private String CLOUDAMQP_APIKEY;
+
+	@Value("${CLOUDAMQP_URL}")
+	private String CLOUDAMQP_URL;
+
 	private String DB_SEARCH = "/bot/search/";
 	private String EL_INSERT = "/bot/elastic/insert/";
+
+	private final static String QUEUE_NAME = "bot_update";
 
 	@Override
 	public void onUpdateReceived(Update update) {
 		if (update.hasMessage() && update.getMessage().hasText()) {
-	        try {
-	        	
-	            //String result = restTemplate.getForObject(PERSISTENT_SERVICE+GET_UPDATE_METHOD, String.class, update.getMessage().getText());
-	        	
-	        	log.info("******************* onUpdateReceived *******************");
-	            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-	            		.setChatId(update.getMessage().getChatId())
-	            		.setText("Elaboro la richiesta per: "+update.getMessage().getText());
-	            //execute(message); // Call method to send the message
-	            
-	            if (update.getMessage().getText().contains("?"))
-	            {
-		            JsonArray jsonArray = new JsonArray(1);
-		    		jsonArray.add(update.getMessage().getText());
-		    		HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
-		    		ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE+EL_INSERT, HttpMethod.PUT, request, String.class);
-	            }
-	        } 
-//	        catch (TelegramApiException e) 
-//	        {
-//	            log.warn("Probably message empty");
-//	        } 
-	        catch (Exception e) {
-	        	log.error("Generic comunication error", e);
-	        }
-	    }
-		
+			
+			
+			
+			try {
+
+				// String result =
+				// restTemplate.getForObject(PERSISTENT_SERVICE+GET_UPDATE_METHOD, String.class,
+				// update.getMessage().getText());
+
+				log.info("******************* onUpdateReceived *******************");
+				SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+						.setChatId(update.getMessage().getChatId())
+						.setText("Elaboro la richiesta per: " + update.getMessage().getText());
+				// execute(message); // Call method to send the message
+
+			}
+			catch (Exception e) {
+				log.error("Generic comunication error", e);
+			}
+			
+			if (update.getMessage().getText().contains("?")) {
+				ConnectionFactory factory = new ConnectionFactory();
+				Connection connection = null;
+				try {
+					factory.setUri(CLOUDAMQP_URL);
+					factory.setRequestedHeartbeat(30);
+					factory.setConnectionTimeout(120);
+					
+					connection = factory.newConnection();
+					Channel channel = connection.createChannel();
+					channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+					
+					ObjectMapper parser = new ObjectMapper();
+					String jsonUpdate = parser.writeValueAsString(update);
+					
+					channel.basicPublish("", QUEUE_NAME, null, jsonUpdate.getBytes());
+				} catch (IOException e) {
+					log.error("Probably QUEUE_NAME wrong", e);
+				} catch (KeyManagementException | NoSuchAlgorithmException | URISyntaxException e1) {
+					log.error("", e1);
+				} finally {
+					if (connection.isOpen()) {
+						try {
+							connection.close();
+						} catch (IOException e) {
+							log.error("Connection error during closing", e);
+						}
+					}
+				}
+			}
+//			if (update.getMessage().getText().contains("?")) {
+//				JsonArray jsonArray = new JsonArray(1);
+//				jsonArray.add(update.getMessage().getText());
+//				HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
+//				ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE + EL_INSERT, HttpMethod.PUT,
+//						request, String.class);
+//			}
+		}
+
 	}
-	
+
 	@PostConstruct
-    public void registerBot(){
+	public void registerBot() {
 		log.debug("token: {}", TOKEN);
-    }
+	}
 
 	@Override
 	public String getBotUsername() {
