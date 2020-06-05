@@ -22,6 +22,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<start-class>it.pincio.telegrambot.TelegramBotConfiguration</start-class>
 		<java.version>1.8</java.version>
 	</properties>
 
@@ -38,12 +39,6 @@
 			<groupId>org.telegram</groupId>
 			<artifactId>telegrambots-spring-boot-starter</artifactId>
 			<version>4.1.2</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.json</groupId>
-					<artifactId>json</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<!-- https://github.com/rubenlagus/TelegramBots/tree/master/telegrambots-extensions -->
