@@ -99,7 +99,7 @@ public class TelegramBotConfiguration {
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
             telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
-            telegramBotsApi.registerBot(new TestTelegramBot());
+//            telegramBotsApi.registerBot(new TestTelegramBot());
         } catch (TelegramApiException e) {
             log.error("******************* Registration hook error *******************");
         }
