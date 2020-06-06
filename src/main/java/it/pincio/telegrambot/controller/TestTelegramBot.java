@@ -20,7 +20,7 @@ import com.google.gson.JsonArray;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
+//@Component
 @Slf4j
 public class TestTelegramBot extends TelegramLongPollingBot {
 	

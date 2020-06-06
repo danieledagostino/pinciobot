@@ -57,25 +57,6 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	public void onUpdateReceived(Update update) {
 		if (update.hasMessage() && update.getMessage().hasText()) {
 			
-			
-			
-			try {
-
-				// String result =
-				// restTemplate.getForObject(PERSISTENT_SERVICE+GET_UPDATE_METHOD, String.class,
-				// update.getMessage().getText());
-
-				log.info("******************* onUpdateReceived *******************");
-				SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-						.setChatId(update.getMessage().getChatId())
-						.setText("Elaboro la richiesta per: " + update.getMessage().getText());
-				// execute(message); // Call method to send the message
-
-			}
-			catch (Exception e) {
-				log.error("Generic comunication error", e);
-			}
-			
 			if (update.getMessage().getText().contains("?")) {
 				ConnectionFactory factory = new ConnectionFactory();
 				Connection connection = null;
