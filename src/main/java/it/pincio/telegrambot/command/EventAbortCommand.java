@@ -7,13 +7,13 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-public class EventsListCommand extends DefaultBotCommand {
+public class EventAbortCommand extends DefaultBotCommand {
 	
-	private static final String COMMAND_IDENTIFIER = "lista_eventi";
+	private static final String COMMAND_IDENTIFIER = "annulla_evento";
 	private static final String COMMAND_DESCRIPTION = "shows all commands. Use /help [command] for more info";
 	private static final String EXTENDED_DESCRIPTION = "This command displays all commands the bot has to offer.\n /help [command] can display deeper information";
 	
-	public EventsListCommand(String commandIdentifier, String description) {
+	public EventAbortCommand() {
 		super(COMMAND_IDENTIFIER, COMMAND_DESCRIPTION);
 	}
 

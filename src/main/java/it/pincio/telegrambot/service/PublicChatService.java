@@ -23,7 +23,7 @@ public class PublicChatService {
 	
 	public List<Faq> checkQuestion(String textMessage)
 	{
-		return faqRepository.searchReabilityAnswer(textMessage, textMessage, textMessage, DB_REQ_SCORE, DB_REQ_HINT);
+		return faqRepository.searchReabilityAnswer(textMessage, DB_REQ_SCORE, DB_REQ_HINT);
 	}
 	
 	

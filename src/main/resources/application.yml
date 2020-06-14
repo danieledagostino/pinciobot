@@ -22,7 +22,6 @@ server:
       enabled: true
 ---
 spring:
-  profiles: heroku
   datasource:
     #initialization-mode: always
     password: ${DB_PW}

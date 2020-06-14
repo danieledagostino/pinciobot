@@ -2,14 +2,18 @@ package it.pincio.persistence.dao;
 
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import it.pincio.persistence.bean.Faq;
 
 @Repository
-public interface FaqRepository extends CrudRepository<Faq, Integer>
+public interface FaqRepository extends JpaRepository<Faq, Integer>
 {
-	List<Faq> searchReabilityAnswer(String text1, String text2, String text3, Float DB_REQ_SCORE, Float DB_REQ_HINT);
+	
+	@Query(nativeQuery = true, name = "Faq.searchReabilityAnswer")
+	List<Faq> searchReabilityAnswer(String text, Float DB_REQ_SCORE, Float DB_REQ_HINT);
 	
 }

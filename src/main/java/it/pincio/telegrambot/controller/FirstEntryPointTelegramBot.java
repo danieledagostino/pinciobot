@@ -12,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
+import org.telegram.telegrambots.extensions.bots.commandbot.commands.CommandRegistry;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -21,6 +23,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import it.pincio.persistence.bean.Faq;
+import it.pincio.telegrambot.service.ConfigurationService;
 import it.pincio.telegrambot.service.PrivateChatService;
 import it.pincio.telegrambot.service.PublicChatService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,20 +32,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 
-	@Autowired
-	private RestTemplate restTemplate;
-
-	@Autowired
-	private HttpHeaders httpHeaders;
-
 	@Value("${PINCIO_BOT_TOKEN}")
 	private String TOKEN;
 	
-	@Autowired
-	PublicChatService publicChatService;
+	@Value("${USER_BOT}")
+	private String userBot;
 	
 	@Autowired
-	PrivateChatService privateChatService;
+	private PublicChatService publicChatService;
+	
+	@Autowired
+	private ConfigurationService configurationService;
 
 	@Override
 	public void onUpdateReceived(Update update) {
@@ -90,7 +90,20 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	}
 
 	@PostConstruct
-	public void registerBot() {
+	public void postConstruct() {
+		
+		List<BotCommand> commands = new ArrayList<BotCommand>();
+		try {
+			commands = configurationService.getAllCommands();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			log.error("Java reflectiong for instancing commands didn't work");
+		}
+		CommandRegistry commandRegistry = new CommandRegistry(false, userBot);
+		
+		for (BotCommand botCommand : commands) {
+			commandRegistry.register(botCommand);
+		}
+		
 		log.debug("token: {}", TOKEN);
 	}
 
