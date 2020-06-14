@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.CommandRegistry;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -31,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
+public class FirstEntryPointTelegramBot extends TelegramLongPollingCommandBot {
 
 	@Value("${PINCIO_BOT_TOKEN}")
 	private String TOKEN;
@@ -46,7 +47,7 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 	private ConfigurationService configurationService;
 
 	@Override
-	public void onUpdateReceived(Update update) {
+	public void processNonCommandUpdate(Update update) {
 		if (update.hasMessage() && update.getMessage().hasText()) {
 			
 			String textMessage = update.getMessage().getText();
@@ -108,10 +109,9 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			log.error("Java reflectiong for instancing commands didn't work");
 		}
-		CommandRegistry commandRegistry = new CommandRegistry(false, userBot);
 		
 		for (BotCommand botCommand : commands) {
-			commandRegistry.register(botCommand);
+			register(botCommand);
 		}
 		
 		log.debug("token: {}", TOKEN);
