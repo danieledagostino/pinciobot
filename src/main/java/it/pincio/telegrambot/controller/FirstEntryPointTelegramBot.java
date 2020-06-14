@@ -21,6 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import it.pincio.persistence.bean.Faq;
 import it.pincio.telegrambot.service.ConfigurationService;
@@ -49,7 +50,7 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 		if (update.hasMessage() && update.getMessage().hasText()) {
 			
 			String textMessage = update.getMessage().getText();
-			Chat chat = update.getMessage().getForwardFromChat();
+			Chat chat = update.getMessage().getChat();
 			Integer messageId = update.getMessage().getMessageId();
 			if (textMessage.substring(textMessage.length() - 1, textMessage.length()).equals("?")) {
 				List<Faq> listFaq = publicChatService.checkQuestion(textMessage);
@@ -66,23 +67,32 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 				{
 					
 					InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
-					List<InlineKeyboardButton> keyboardRows = new ArrayList<InlineKeyboardButton>();
+					List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();
+					List<InlineKeyboardButton> keyboardButtons = null;
 					InlineKeyboardButton inlineKB = null;
 					
 					for (Faq faq : listFaq) {
-						inlineKB = new InlineKeyboardButton(faq.getKeywords());
+						inlineKB = new InlineKeyboardButton(faq.getHint());
 						inlineKB.setCallbackData(String.valueOf(faq.getId()));
 						
-						keyboardRows.add(inlineKB);
+						keyboardButtons = new ArrayList<InlineKeyboardButton>();
+						keyboardButtons.add(inlineKB);
+						keyboardRows.add(keyboardButtons);
 					}
 					
-					replyMarkup.setKeyboard(Arrays.asList(keyboardRows));
+					replyMarkup.setKeyboard(keyboardRows);
 					
-					SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-			                .setChatId(chat.getId())
+					SendMessage message = new SendMessage(); // Create a SendMessage object with mandatory fields
+					message.setChatId(chat.getId())
 			                .setReplyToMessageId(messageId)
 			                .setReplyMarkup(replyMarkup)
-			                .setText("");
+			                .setText("Ciao, sono il tuo assistente. Non ho ben capito cosa stai cercando. Scegli qui sotto la domanda");
+					
+					try {
+						execute(message);
+					} catch (TelegramApiException e) {
+						log.error("Message not sent", e);
+					}
 				}
 			}
 		}

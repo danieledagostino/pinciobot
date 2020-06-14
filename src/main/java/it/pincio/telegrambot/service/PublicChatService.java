@@ -1,5 +1,6 @@
 package it.pincio.telegrambot.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,10 @@ public class PublicChatService {
 	FaqRepository faqRepository;
 	
 	@Value("${DB_REQ_SCORE}")
-	private Float DB_REQ_SCORE;
+	private BigDecimal DB_REQ_SCORE;
 	
 	@Value("${DB_REQ_HINT}")
-	private Float DB_REQ_HINT;
+	private BigDecimal DB_REQ_HINT;
 	
 	public List<Faq> checkQuestion(String textMessage)
 	{
