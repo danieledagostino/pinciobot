@@ -1,9 +1,8 @@
 package it.pincio.telegrambot.controller;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -14,13 +13,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-
+import it.pincio.persistence.bean.Faq;
+import it.pincio.telegrambot.service.PrivateChatService;
+import it.pincio.telegrambot.service.PublicChatService;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -35,65 +37,54 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingBot {
 
 	@Value("${PINCIO_BOT_TOKEN}")
 	private String TOKEN;
-
-//	@Value("${PERSISTENT_SERVICE}")
-//	private String PERSISTENT_SERVICE;
-//
-//	@Value("${ELASTIC_SERVICE}")
-//	private String ELASTIC_SERVICE;
-
-	@Value("${CLOUDAMQP_APIKEY}")
-	private String CLOUDAMQP_APIKEY;
-
-	@Value("${CLOUDAMQP_URL}")
-	private String CLOUDAMQP_URL;
-
-	private String DB_SEARCH = "/bot/search/";
-	private String EL_INSERT = "/bot/elastic/insert/";
-
-	private final static String QUEUE_NAME = "bot_update";
+	
+	@Autowired
+	PublicChatService publicChatService;
+	
+	@Autowired
+	PrivateChatService privateChatService;
 
 	@Override
 	public void onUpdateReceived(Update update) {
 		if (update.hasMessage() && update.getMessage().hasText()) {
 			
-			if (update.getMessage().getText().contains("?")) {
-				ConnectionFactory factory = new ConnectionFactory();
-				Connection connection = null;
-				try {
-					factory.setUri(CLOUDAMQP_URL);
-					factory.setRequestedHeartbeat(30);
-					factory.setConnectionTimeout(120);
+			String textMessage = update.getMessage().getText();
+			Chat chat = update.getMessage().getForwardFromChat();
+			Integer messageId = update.getMessage().getMessageId();
+			if (textMessage.substring(textMessage.length() - 1, textMessage.length()).equals("?")) {
+				List<Faq> listFaq = publicChatService.checkQuestion(textMessage);
+				
+				if (listFaq.size() == 1)
+				{
+					Faq faq = listFaq.get(0);
+					SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+			                .setChatId(chat.getId())
+			                .setReplyToMessageId(messageId)
+			                .setText(faq.getAnswer());
+				}
+				else if (listFaq.size() > 1)
+				{
 					
-					connection = factory.newConnection();
-					Channel channel = connection.createChannel();
-					channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+					InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
+					List<InlineKeyboardButton> keyboardRows = new ArrayList<InlineKeyboardButton>();
+					InlineKeyboardButton inlineKB = null;
 					
-					ObjectMapper parser = new ObjectMapper();
-					String jsonUpdate = parser.writeValueAsString(update);
-					
-					channel.basicPublish("", QUEUE_NAME, null, jsonUpdate.getBytes());
-				} catch (IOException e) {
-					log.error("Probably QUEUE_NAME wrong", e);
-				} catch (KeyManagementException | NoSuchAlgorithmException | URISyntaxException e1) {
-					log.error("", e1);
-				} finally {
-					if (connection.isOpen()) {
-						try {
-							connection.close();
-						} catch (IOException e) {
-							log.error("Connection error during closing", e);
-						}
+					for (Faq faq : listFaq) {
+						inlineKB = new InlineKeyboardButton(faq.getKeywords());
+						inlineKB.setCallbackData(String.valueOf(faq.getId()));
+						
+						keyboardRows.add(inlineKB);
 					}
+					
+					replyMarkup.setKeyboard(Arrays.asList(keyboardRows));
+					
+					SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+			                .setChatId(chat.getId())
+			                .setReplyToMessageId(messageId)
+			                .setReplyMarkup(replyMarkup)
+			                .setText("");
 				}
 			}
-//			if (update.getMessage().getText().contains("?")) {
-//				JsonArray jsonArray = new JsonArray(1);
-//				jsonArray.add(update.getMessage().getText());
-//				HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), httpHeaders);
-//				ResponseEntity<String> response = restTemplate.exchange(ELASTIC_SERVICE + EL_INSERT, HttpMethod.PUT,
-//						request, String.class);
-//			}
 		}
 
 	}
