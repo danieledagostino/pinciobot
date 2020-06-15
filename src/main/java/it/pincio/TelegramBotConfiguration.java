@@ -24,7 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 @PropertySource("classpath:app.properties")
 @EnableJpaRepositories
-@ComponentScan
+@ComponentScans({
+	@ComponentScan("it.pincio.telegrambot.service"),
+	@ComponentScan("it.pincio.persistence.dao"),
+	@ComponentScan("it.pincio.telegrambot.command")
+})
 @Slf4j
 public class TelegramBotConfiguration {
 	

@@ -1,5 +1,7 @@
 package it.pincio.persistence.bean;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,9 +16,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Command {
+public class Command implements Serializable{
 
-	
+	private static final long serialVersionUID = -6498257175228844443L;
+
 	@Id
 	@Column(name = "nome_comando")
 	private String commandName;

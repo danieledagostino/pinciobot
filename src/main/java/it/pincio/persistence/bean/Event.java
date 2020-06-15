@@ -1,7 +1,12 @@
 package it.pincio.persistence.bean;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,9 +19,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "eventi")
 @Data
-public class Event {
+public class Event implements Serializable{
+
+	private static final long serialVersionUID = -5085471528148027217L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
 	@Column(name = "titolo")
@@ -27,7 +35,7 @@ public class Event {
 	
 	@DateTimeFormat
 	@Column(name = "data_inizio")
-	private String startDate;
+	private Date startDate;
 	
 	@Column(name = "luogo_nome")
 	private String placeName;
@@ -46,8 +54,11 @@ public class Event {
 	
 	@DateTimeFormat
 	@Column(name = "data_inserimento")
-	private String insertDate;
+	private Date insertDate;
 	
 	@Column(name = "step")
 	private Integer step;
+	
+	@Column(name = "id_facebook")
+	private String idFacebook;	
 }

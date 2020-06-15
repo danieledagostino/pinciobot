@@ -1,5 +1,6 @@
 package it.pincio.telegrambot.command;
 
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.DefaultBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
@@ -7,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+@Component
 public class MyEventsCommand extends DefaultBotCommand {
 	
 	private static final String COMMAND_IDENTIFIER = "miei_eventi";

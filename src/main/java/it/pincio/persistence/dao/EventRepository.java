@@ -2,6 +2,8 @@ package it.pincio.persistence.dao;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +16,7 @@ import it.pincio.persistence.bean.Faq;
 public interface EventRepository extends JpaRepository<Event, Integer>
 {
 	
-	@Query(nativeQuery = true, name = "Event.searchByCurrentDate")
 	List<Event> searchByCurrentDate(@Param("idUser") String idUser);
 	
+	List<Event> searchCurrentEvents();
 }

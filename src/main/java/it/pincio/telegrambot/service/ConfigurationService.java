@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 
@@ -15,6 +16,9 @@ public class ConfigurationService {
 
 	@Autowired
 	CommandRepository commandRepository;
+	
+	@Autowired 
+	private ApplicationContext applicationContext;
 
 	public List<BotCommand> getAllCommands() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
@@ -28,7 +32,7 @@ public class ConfigurationService {
 		for (Command command : notInMaintenanceCommand) {
 
 			t = (Class<BotCommand>)Class.forName("it.pincio.telegrambot.command." + command.getJavaCommandName());
-			botCommand = t.newInstance();
+			botCommand = applicationContext.getBean(t);
 			botCommands.add(botCommand);
 		}
 
