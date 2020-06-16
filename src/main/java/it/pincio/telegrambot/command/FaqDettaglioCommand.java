@@ -48,11 +48,14 @@ public class FaqDettaglioCommand extends BotAndCallbackCommand {
 	public SendMessage processCallback(CallbackQuery callbackQuery, String... args) {
 		SendMessage sendMessage = new SendMessage();
 		try {
-			Faq faq = faqService.getFaqById(Integer.valueOf(args[0]));
-			
-			sendMessage.setChatId(String.valueOf(callbackQuery.getFrom().getId()))
-				.setText(faq.getAnswer());
-			
+			if ("0".equals(args[0])) {
+				
+			} else {
+				Faq faq = faqService.getFaqById(Integer.valueOf(args[0]));
+				
+				sendMessage.setChatId(String.valueOf(callbackQuery.getFrom().getId()))
+					.setText(faq.getAnswer());
+			}
 		} catch (Exception e) {
 			log.error("Partecipazione non confermata", e);
 			sendMessage.setText("Partecipazione non confermata.\n"+
