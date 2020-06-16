@@ -1,0 +1,39 @@
+# ==============================================================
+# = Pincio Web Service
+# ==============================================================
+logging:
+  level:
+    ROOT: ERROR
+    #org:
+    #  apache:
+    #    tomcat: DEBUG
+    #    catalina: DEBUG
+    org.springframework.boot: ERROR
+    org.springframework.boot.autoconfigure.data: ERROR
+    it.pincio: ERROR
+    org.apache: ERROR
+spring:
+  datasource:
+    #initialization-mode: always
+    password: ${DB_PW}
+    platform: mysql
+    url: ${DB_URL}
+    username: ${DB_USER}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 60000
+      max-lifetime: 60000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+  
+  
