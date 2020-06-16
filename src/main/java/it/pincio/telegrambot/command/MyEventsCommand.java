@@ -15,6 +15,7 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import it.pincio.telegrambot.service.EventService;
+import it.pincio.telegrambot.utility.EmojiiCode;
 
 @Component
 public class MyEventsCommand extends BotAndCallbackCommand {
@@ -40,9 +41,9 @@ public class MyEventsCommand extends BotAndCallbackCommand {
 		InlineKeyboardMarkup replyMarkup = eventService.searchMyEvents(user.getId());
 		
 		String[] emojii = new String[3];
-		emojii[0] = eventService.CONFIRMED_ICON;
-		emojii[1] = eventService.UNCOMPLETE_ICON;
-		emojii[2] = eventService.OLD_ICON;
+		emojii[0] = EmojiiCode.WHITE_HEAVY_CHECK_MARK_ICON;
+		emojii[1] = EmojiiCode.HEAVY_EXCLAMATION_MARK_ICON;
+		emojii[2] = EmojiiCode.VICTORY_ICON;
 		
 		SendMessage messageToPrivateChat = new SendMessage() // Create a SendMessage object with mandatory fields
                 .setChatId(String.valueOf(user.getId()))

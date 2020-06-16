@@ -20,6 +20,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import it.pincio.persistence.bean.Event;
 import it.pincio.persistence.dao.EventRepository;
+import it.pincio.telegrambot.utility.EmojiiCode;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -31,9 +32,6 @@ public class EventService {
 	
 	// https://codepoints.net/
 	private String patternDate = "@(2020)([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-5][0-9])@";
-	public final String CONFIRMED_ICON = "\u2705";
-	public final String UNCOMPLETE_ICON = "\u2757";
-	public final String OLD_ICON = "\u270C";
 	
 	@Autowired
 	EventRepository eventRepository;
@@ -136,7 +134,7 @@ public class EventService {
 		InlineKeyboardButton inlineKB = null;
 		
 		for (Event e : oldEvents) {
-			inlineKB = new InlineKeyboardButton(OLD_ICON+e.getTitle());
+			inlineKB = new InlineKeyboardButton(EmojiiCode.VICTORY_ICON+e.getTitle());
 			inlineKB.setCallbackData("miei_eventi,"+e.getId());
 			
 			keyboardButtons = new ArrayList<InlineKeyboardButton>();
@@ -145,7 +143,7 @@ public class EventService {
 		}
 		
 		for (Event e : confirmedEvents) {
-			inlineKB = new InlineKeyboardButton(CONFIRMED_ICON+e.getTitle());
+			inlineKB = new InlineKeyboardButton(EmojiiCode.WHITE_HEAVY_CHECK_MARK_ICON+e.getTitle());
 			inlineKB.setCallbackData("miei_eventi,"+e.getId());
 			
 			keyboardButtons = new ArrayList<InlineKeyboardButton>();
@@ -154,7 +152,7 @@ public class EventService {
 		}
 		
 		for (Event e : uncompleteEvents) {
-			inlineKB = new InlineKeyboardButton(UNCOMPLETE_ICON+e.getTitle());
+			inlineKB = new InlineKeyboardButton(EmojiiCode.HEAVY_EXCLAMATION_MARK_ICON+e.getTitle());
 			inlineKB.setCallbackData("miei_eventi,"+e.getId());
 			
 			keyboardButtons = new ArrayList<InlineKeyboardButton>();

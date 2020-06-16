@@ -41,20 +41,19 @@ public class FaqDettaglioCommand extends BotAndCallbackCommand {
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, Integer messageId, String[] arguments) {
 		
-		Faq faq = faqService.getFaqById(Integer.valueOf(arguments[0]));
+		//Faq faq = faqService.getFaqById(Integer.valueOf(arguments[0]));
 	}
 
 	@Override
 	public SendMessage processCallback(CallbackQuery callbackQuery, String... args) {
-		SendMessage sendMessage = new SendMessage();
+		SendMessage sendMessage = null;
 		try {
 			if ("0".equals(args[0])) {
 				
 			} else {
-				Faq faq = faqService.getFaqById(Integer.valueOf(args[0]));
+				sendMessage = faqService.getFaqById(Integer.valueOf(args[0]));
 				
-				sendMessage.setChatId(String.valueOf(callbackQuery.getFrom().getId()))
-					.setText(faq.getAnswer());
+				sendMessage.setChatId(String.valueOf(callbackQuery.getFrom().getId()));					
 			}
 		} catch (Exception e) {
 			log.error("Partecipazione non confermata", e);

@@ -47,16 +47,17 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 			CallbackQuery cb = update.getCallbackQuery();
 			String[] args = cb.getData().split(CALLBACKDATA_ARGS_SEPARATOR);
 			
-			BotAndCallbackCommand botCommand = getRegisteredCommand(args[0]);
-			SendMessage sendMessage = botCommand.processCallback(cb, args[1]);
-			
-			
-			//TODO If message sent from group, the bot should send a message to the user to inform him to switch on the private chat
 			try {
+				BotAndCallbackCommand botCommand = getRegisteredCommand(args[0]);
+				SendMessage sendMessage = botCommand.processCallback(cb, args[1]);
+				
 				execute(sendMessage);
-			} catch (TelegramApiException e) {
+			}catch (NullPointerException e) {
+				log.error("Command {} not implemented yet", args[0]);
+			}catch (TelegramApiException e) {
 				log.error("Message not sent", e);
 			}
+			
             return;
 		}
         processNonCommandUpdate(update);
