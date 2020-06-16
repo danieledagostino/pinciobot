@@ -30,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAbsSender implements ICommandRegistry, LongPollingBot {
 
+	private final String CALLBACKDATA_ARGS_SEPARATOR = ",";
+	
 	@Override
     public final void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
@@ -43,25 +45,19 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
             }
         } else if (update.hasCallbackQuery()) {
 			CallbackQuery cb = update.getCallbackQuery();
-			Message repliedMessage = cb.getMessage().getReplyToMessage();
-			Chat chat = cb.getMessage().getChat();
-			if (repliedMessage.isCommand()) {
-				String commandIdentifier = removeUsernameFromCommandIfNeeded(repliedMessage.getText().substring(1));
-				BotAndCallbackCommand botCommand = getRegisteredCommand(commandIdentifier);
-				String message = botCommand.processCallback(repliedMessage, cb.getData());
-				
-				SendMessage sendMessage = new SendMessage(); // Create a SendMessage object with mandatory fields
-				sendMessage.setChatId(chat.getId())
-						.setReplyToMessageId(cb.getMessage().getMessageId())
-		                .setText(message);
-				
-				try {
-					execute(sendMessage);
-				} catch (TelegramApiException e) {
-					log.error("Message not sent", e);
-				}
-                return;
+			String[] args = cb.getData().split(CALLBACKDATA_ARGS_SEPARATOR);
+			
+			BotAndCallbackCommand botCommand = getRegisteredCommand(args[0]);
+			SendMessage sendMessage = botCommand.processCallback(cb, args[1]);
+			
+			
+			//TODO If message sent from group, the bot shound send a message to the user to inform him to switch on the private chat
+			try {
+				execute(sendMessage);
+			} catch (TelegramApiException e) {
+				log.error("Message not sent", e);
 			}
+            return;
 		}
         processNonCommandUpdate(update);
     }

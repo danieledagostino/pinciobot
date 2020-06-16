@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.DefaultBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -60,29 +61,35 @@ public class AddParticipationCommand extends BotAndCallbackCommand {
 			}
 		}
 		
-		
 	}
 
 	@Override
-	public String processCallback(Message repliedMessage, String... args) {
-		
+	public SendMessage processCallback(CallbackQuery callbackQuery, String... args) {
+		SendMessage sendMessage = new SendMessage();
+		Chat chat = callbackQuery.getMessage().getChat();
 		try {
 			Event e = eventService.findById(Integer.valueOf(args[0]));
 			
 			Partecipant partecipant = new Partecipant();
 			PartecipantId id = new PartecipantId();
-			id.setUser(String.valueOf(repliedMessage.getFrom().getId()));
+			id.setUser(String.valueOf(callbackQuery.getFrom().getId()));
 			id.setEvent(e);
 			
 			partecipant.setPartecipantId(id);
 			addParticipationService.insert(partecipant);
-			return "Partecipazione aggiunta. Grazie!";
+			
+			sendMessage.setChatId(chat.getId())
+				.setReplyToMessageId(callbackQuery.getMessage().getMessageId());
+			sendMessage.setText("Evento: "+e.getTitle()+"\n"+
+					"Partecipazione aggiunta. Grazie!");
 			
 		} catch (Exception e) {
 			log.error("Partecipazione non confermata", e);
-			return "Partecipazione non confermata.\n"+
-				"Puoi gestire tutto comodamente in chat privata col bot. Prova a premere qui @PincioBot";
+			sendMessage.setText("Partecipazione non confermata.\n"+
+				"Puoi gestire tutto comodamente in chat privata col bot. Prova a premere qui @PincioBot");
 		}
+		
+		return sendMessage;
 	}
 
 	

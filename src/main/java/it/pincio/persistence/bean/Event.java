@@ -2,12 +2,16 @@ package it.pincio.persistence.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -61,4 +65,7 @@ public class Event implements Serializable{
 	
 	@Column(name = "id_facebook")
 	private String idFacebook;	
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "partecipantId.event")
+	Set<Partecipant> partecipants = new HashSet<Partecipant>();
 }

@@ -19,4 +19,10 @@ public interface EventRepository extends JpaRepository<Event, Integer>
 	List<Event> searchByCurrentDate(@Param("idUser") String idUser);
 	
 	List<Event> searchCurrentEvents();
+	
+	List<Event> searchMyOldEvents(@Param("idUser") String idUser);
+	
+	List<Event> searchMyConfirmedEvents(@Param("idUser") String idUser);
+	
+	List<Event> searchMyUncompleteEvents(@Param("idUser") String idUser);
 }

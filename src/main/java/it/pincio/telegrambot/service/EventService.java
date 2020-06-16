@@ -4,14 +4,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import it.pincio.persistence.bean.Event;
 import it.pincio.persistence.dao.EventRepository;
@@ -21,7 +26,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EventService {
 	
+	@Autowired
+	MessageSource messageSource;
+	
+	// https://codepoints.net/
 	private String patternDate = "@(2020)([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-5][0-9])@";
+	public final String CONFIRMED_ICON = "\u2705";
+	public final String UNCOMPLETE_ICON = "\u2757";
+	public final String OLD_ICON = "\u270C";
 	
 	@Autowired
 	EventRepository eventRepository;
@@ -40,7 +52,7 @@ public class EventService {
 		}
 		
 		if ((step == 1 || step == 2 || step == 3) && "".equals(args[0].trim())) {
-			returnMessage = "Si è verificato un errore. Hai invocando il comando /aggiungi_evento ma senza argomenti. Riprova!";
+			returnMessage = messageSource.getMessage("event.service.add.error", null, Locale.ITALY);
 		} else if (step == 0){
 			
 				if ("".equals(args[0].trim())) {
@@ -112,8 +124,73 @@ public class EventService {
 		return eventRepository.searchCurrentEvents();
 	}
 	
+	public InlineKeyboardMarkup searchMyEvents(Integer userId){
+		List<Event> oldEvents = eventRepository.searchMyOldEvents(String.valueOf(userId));
+		List<Event> confirmedEvents = eventRepository.searchMyConfirmedEvents(String.valueOf(userId));
+		List<Event> uncompleteEvents = eventRepository.searchMyUncompleteEvents(String.valueOf(userId));
+		
+		List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();
+		
+		InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
+		List<InlineKeyboardButton> keyboardButtons = null;
+		InlineKeyboardButton inlineKB = null;
+		
+		for (Event e : oldEvents) {
+			inlineKB = new InlineKeyboardButton(OLD_ICON+e.getTitle());
+			inlineKB.setCallbackData("miei_eventi,"+e.getId());
+			
+			keyboardButtons = new ArrayList<InlineKeyboardButton>();
+			keyboardButtons.add(inlineKB);
+			keyboardRows.add(keyboardButtons);
+		}
+		
+		for (Event e : confirmedEvents) {
+			inlineKB = new InlineKeyboardButton(CONFIRMED_ICON+e.getTitle());
+			inlineKB.setCallbackData("miei_eventi,"+e.getId());
+			
+			keyboardButtons = new ArrayList<InlineKeyboardButton>();
+			keyboardButtons.add(inlineKB);
+			keyboardRows.add(keyboardButtons);
+		}
+		
+		for (Event e : uncompleteEvents) {
+			inlineKB = new InlineKeyboardButton(UNCOMPLETE_ICON+e.getTitle());
+			inlineKB.setCallbackData("miei_eventi,"+e.getId());
+			
+			keyboardButtons = new ArrayList<InlineKeyboardButton>();
+			keyboardButtons.add(inlineKB);
+			keyboardRows.add(keyboardButtons);
+		}
+		
+		replyMarkup.setKeyboard(keyboardRows);
+		
+		return replyMarkup;
+	}
+	
 	public Event findById(Integer id) {
 		Optional<Event> e = eventRepository.findById(id);
 		return e.get();
+	}
+	
+	public InlineKeyboardMarkup prepareJoinMessage(List<Event> events)
+	{
+		List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();
+		
+		InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
+		List<InlineKeyboardButton> keyboardButtons = null;
+		InlineKeyboardButton inlineKB = null;
+		
+		for (Event e : events) {
+			inlineKB = new InlineKeyboardButton(e.getTitle());
+			inlineKB.setCallbackData("lista_eventi,"+e.getId());
+			
+			keyboardButtons = new ArrayList<InlineKeyboardButton>();
+			keyboardButtons.add(inlineKB);
+			keyboardRows.add(keyboardButtons);
+		}
+		
+		replyMarkup.setKeyboard(keyboardRows);
+		
+		return replyMarkup;
 	}
 }

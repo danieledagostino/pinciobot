@@ -3,10 +3,9 @@ package it.pincio.persistence.bean;
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 import lombok.Data;
 
@@ -18,8 +17,17 @@ public class PartecipantId implements Serializable{
 
 	private String user;
 	
-	@JoinColumn(referencedColumnName = "id", name = "id_evento")
-	@ManyToOne
+	@JoinColumn(name = "id_evento")
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Event event;
+
+	public PartecipantId(String user, Event event) {
+		super();
+		this.user = user;
+		this.event = event;
+	}
+	
+	public PartecipantId() {
+	}
 	
 }

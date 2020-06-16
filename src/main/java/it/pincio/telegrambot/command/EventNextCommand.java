@@ -3,13 +3,14 @@ package it.pincio.telegrambot.command;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.DefaultBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
-public class EventNextCommand extends DefaultBotCommand {
+public class EventNextCommand extends BotAndCallbackCommand {
 	
 	private static final String COMMAND_IDENTIFIER = "prossimo_evento";
 	private static final String COMMAND_DESCRIPTION = "shows all commands. Use /help [command] for more info";
@@ -32,6 +33,12 @@ public class EventNextCommand extends DefaultBotCommand {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+	}
+
+	@Override
+	public SendMessage processCallback(CallbackQuery callbackQuery, String... args) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
