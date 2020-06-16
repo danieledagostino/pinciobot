@@ -51,7 +51,7 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 			SendMessage sendMessage = botCommand.processCallback(cb, args[1]);
 			
 			
-			//TODO If message sent from group, the bot shound send a message to the user to inform him to switch on the private chat
+			//TODO If message sent from group, the bot should send a message to the user to inform him to switch on the private chat
 			try {
 				execute(sendMessage);
 			} catch (TelegramApiException e) {
