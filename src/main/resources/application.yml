@@ -1,26 +1,17 @@
 # ==============================================================
 # = Pincio Web Service
 # ==============================================================
-spring:
-  profiles:
-    active: "heroku"
-
-     
----
-spring:
-  profiles: local
 logging:
   level:
     ROOT: ERROR
-    org:
-      apache:
-        tomcat: DEBUG
-        catalina: DEBUG
-server:
-  tomcat:
-    accesslog:
-      enabled: true
----
+    #org:
+    #  apache:
+    #    tomcat: DEBUG
+    #    catalina: DEBUG
+    org.springframework.boot: ERROR
+    org.springframework.boot.autoconfigure.data: ERROR
+    it.pincio: ERROR
+    org.apache: ERROR
 spring:
   datasource:
     #initialization-mode: always

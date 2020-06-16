@@ -19,6 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import it.pincio.persistence.bean.Faq;
 import it.pincio.persistence.dao.FaqRepository;
+import it.pincio.telegrambot.utility.Costants;
 import it.pincio.telegrambot.utility.NormalizeText;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,8 +43,6 @@ public class PublicChatService {
 	
 	@Value("${CLOUDAMQP_URL}")
 	private String CLOUDAMQP_URL;
-	
-	private final String TG_UPDATE_QUEUE = "TG_UPDATE_QUEUE";
 	
 	public List<Faq> checkQuestion(String textMessage)
 	{
@@ -92,12 +91,12 @@ public class PublicChatService {
 			
 			connection = factory.newConnection();
 			Channel channel = connection.createChannel();
-			channel.queueDeclare(TG_UPDATE_QUEUE, false, false, false, null);
+			channel.queueDeclare(Costants.TG_UPDATE_QUEUE, false, false, false, null);
 			
 			ObjectMapper parser = new ObjectMapper();
 			String jsonUpdate = parser.writeValueAsString(update);
 			
-			channel.basicPublish("", TG_UPDATE_QUEUE, null, jsonUpdate.getBytes());
+			channel.basicPublish("", Costants.TG_UPDATE_QUEUE, null, jsonUpdate.getBytes());
 		} catch (IOException e) {
 			log.error("Probably QUEUE_NAME wrong", e);
 		} catch (KeyManagementException | NoSuchAlgorithmException | URISyntaxException e1) {
