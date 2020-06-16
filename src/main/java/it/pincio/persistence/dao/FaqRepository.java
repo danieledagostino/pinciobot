@@ -16,5 +16,4 @@ public interface FaqRepository extends JpaRepository<Faq, Integer>
 	
 	@Query(nativeQuery = true, name = "Faq.searchReabilityAnswer")
 	List<Faq> searchReabilityAnswer(@Param("question") String text1, @Param("DB_REQ_SCORE") BigDecimal DB_REQ_SCORE, @Param("DB_REQ_HINT") BigDecimal DB_REQ_HINT);
-	
 }

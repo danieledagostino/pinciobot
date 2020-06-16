@@ -29,9 +29,10 @@ spring:
     url: ${DB_URL}
     username: ${DB_USER}
     driverClassName: com.mysql.cj.jdbc.Driver
-    #tomcat:
-      #max-wait: 20000
-      #max-active: 1
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 60000
+      max-lifetime: 60000
   jpa:
     hibernate:
       ddl-auto: none

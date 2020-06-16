@@ -66,6 +66,8 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingCommandAndCal
 					} catch (TelegramApiException e) {
 						log.error("Message not sent", e);
 					}
+				} else {
+					publicChatService.sendToMessageQueue(update);
 				}
 			}
 		}

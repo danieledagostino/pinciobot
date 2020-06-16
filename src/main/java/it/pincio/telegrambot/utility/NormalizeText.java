@@ -1,7 +1,10 @@
 package it.pincio.telegrambot.utility;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +19,7 @@ public class NormalizeText {
 	@Value("${WORD_MIN_LENGHT}")
 	private static Boolean WORD_MIN_LENGHT;
 
-	public static String execute(String text) throws FileNotFoundException
+	public static String execute(String text) throws IOException
 	{
 	    Map<String, String> charConverter = new HashMap<String, String>();
 	    charConverter.put("Å ","S");
@@ -29,29 +32,24 @@ public class NormalizeText {
 	    charConverter.put("Ã®","i");charConverter.put("Ã¯","i");charConverter.put("Ã°","o");charConverter.put("Ã±","n");charConverter.put("Ã²","o");charConverter.put("Ã³","o");charConverter.put("Ã´","o");charConverter.put("Ãµ","o");
 	    charConverter.put("Ã¶","o");charConverter.put("Ã¸","o");charConverter.put("Ã¹","u");charConverter.put("Ãº","u");charConverter.put("Ã»","u");charConverter.put("Ã½","y");charConverter.put("Ã¾","b");charConverter.put("Ã¿","y");
 
-	    // load stopwords from file
-	    File stopwords = ResourceUtils.getFile(
-			      "stopwords.txt");
-	    
-	    Map<String, String> stopwordsList = new HashMap<String, String>();
-	    
-	    
 	    // normalize string
 	    for (String c : charConverter.keySet()) {
 	    	text = text.replaceAll(c, charConverter.get(c));
 		}
-
 	    
-	    // delete short words
-//	    foreach($words as $key => $value) {
-//	        if(strlen($value) < WORD_MIN_LENGHT) {
-//	            unset($words[$key]);
-//	        }
-//	    }
+	 // load stopwords from file
+	    File stopwords = ResourceUtils.getFile(
+			      "stopwords.txt");
 	    
-	    // strip stopwords
-//	    $words  = array_diff($words, $stopwords);
-//	    $string = implode(" ", $words);
+	    FileReader fr=new FileReader(stopwords);   //reads the file  
+	    BufferedReader br=new BufferedReader(fr);  //creates a buffering character input stream  
+	    String line = null;  
+	    while((line=br.readLine())!=null)  
+	    {  
+	    	text = text.replaceAll(line, "");
+	    }
+	    
+	    fr.close(); 
 	    
 		log.info("Normalize text: "+text);
 	    return text; 
