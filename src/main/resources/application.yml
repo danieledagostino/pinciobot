@@ -4,10 +4,6 @@
 logging:
   level:
     ROOT: ERROR
-    #org:
-    #  apache:
-    #    tomcat: DEBUG
-    #    catalina: DEBUG
     org.springframework.boot: ERROR
     org.springframework.boot.autoconfigure.data: ERROR
     it.pincio: ERROR
@@ -34,5 +30,5 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-    show-sql: true
+    show-sql: false
   
