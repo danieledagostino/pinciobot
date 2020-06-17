@@ -45,7 +45,7 @@ public class TelegramBotConfiguration {
 		
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
-        	session = telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
+//        	session = telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
         	
         } catch (TelegramApiException e) {
             log.error("******************* Registration hook error *******************");
@@ -57,9 +57,9 @@ public class TelegramBotConfiguration {
 	
 	@PreDestroy
 	public static void destroy() {
-		if (session != null && session.isRunning()) {
-			session.stop();
-		}
+//		if (session != null && session.isRunning()) {
+//			session.stop();
+//		}
 	}
 	
 	@Bean
