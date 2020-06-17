@@ -44,12 +44,12 @@ public class TelegramBotConfiguration {
 		ApiContextInitializer.init();
 		
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-        try {
+//        try {
 //        	session = telegramBotsApi.registerBot(new FirstEntryPointTelegramBot());
-        	
-        } catch (TelegramApiException e) {
-            log.error("******************* Registration hook error *******************");
-        }
+//        	
+//        } catch (TelegramApiException e) {
+//            log.error("******************* Registration hook error *******************");
+//        }
 		
 		log.info("******************* ApiContextInitializer.init() *******************");
 		SpringApplication.run(TelegramBotConfiguration.class, args);
