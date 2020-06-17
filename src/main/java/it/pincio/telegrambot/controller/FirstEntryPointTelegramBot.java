@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,12 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class FirstEntryPointTelegramBot extends TelegramLongPollingCommandAndCallbackBot {
-
-	@Value("${PINCIO_BOT_TOKEN}")
-	private String TOKEN;
-
-	@Value("${USER_BOT}")
-	private String userBot;
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -89,12 +84,12 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingCommandAndCal
 
 	@Override
 	public String getBotUsername() {
-		return "NewPincioBot";
+		return System.getenv("USER_BOT");
 	}
 
 	@Override
 	public String getBotToken() {
-		return TOKEN;
+		return System.getenv("PINCIO_BOT_TOKEN");
 	}
 
 }

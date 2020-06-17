@@ -31,7 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 @ComponentScans({
 	@ComponentScan("it.pincio.telegrambot.service"),
 	@ComponentScan("it.pincio.persistence.dao"),
-	@ComponentScan("it.pincio.telegrambot.command")
+	@ComponentScan("it.pincio.telegrambot.command"),
+	@ComponentScan("it.pincio.telegrambot.utility")
 })
 @Slf4j
 public class TelegramBotConfiguration {

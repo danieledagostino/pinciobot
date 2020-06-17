@@ -1,4 +1,9 @@
-#/target/*
+/target/test-classes
+/target/classes
+/target/generated-sources
+/target/generated-test-sources
+/target/maven-archiver
+/target/maven-status
 
 ### STS ###
 .apt_generated
