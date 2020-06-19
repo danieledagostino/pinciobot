@@ -53,7 +53,7 @@ public class EventNextCommand extends BotAndCallbackCommand {
 		// TODO Auto-generated method stub
 		
 		EventDto e = eventService.searchNextEvent();
-		boolean isParticipating = participantService.checkParticipation(String.valueOf(user.getId()), e);
+		boolean isParticipating = participantService.checkParticipation(user.getId(), e.getId());
 		
 		InlineKeyboardMarkup replyMarkup = null;
 		

@@ -68,7 +68,7 @@ public class EventListCommand extends BotAndCallbackCommand {
 		
 		EventDto e = eventService.findById(Integer.valueOf(args[0]));
 		
-		boolean isParticipating = participantService.checkParticipation(String.valueOf(callbackQuery.getFrom().getId()), e);
+		boolean isParticipating = participantService.checkParticipation(callbackQuery.getFrom().getId(), e.getId());
 		
 		InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
 		List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();

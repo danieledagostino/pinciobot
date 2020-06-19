@@ -13,8 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import it.pincio.persistence.bean.Event;
-import it.pincio.persistence.bean.Participant;
+import it.pincio.persistence.dao.ChatUserRepository;
 import it.pincio.telegrambot.dto.EventDto;
 import it.pincio.telegrambot.service.EventService;
 import it.pincio.telegrambot.service.ParticipantService;
@@ -34,6 +33,9 @@ public class AddParticipationCommand extends BotAndCallbackCommand {
 
 	@Autowired
 	ParticipantService participantService;
+	
+	@Autowired
+	ChatUserRepository chatUserRepository;
 
 	public AddParticipationCommand() {
 		super(COMMAND_IDENTIFIER, COMMAND_DESCRIPTION);
@@ -66,12 +68,13 @@ public class AddParticipationCommand extends BotAndCallbackCommand {
 		Chat chat = callbackQuery.getMessage().getChat();
 
 		try {
-			Participant participant = new Participant();
-
-			participant.setEvent(new Event(Integer.valueOf(args[0])));
-			participant.setUser(String.valueOf(callbackQuery.getFrom().getId()));
+//			Participant participant = new Participant();
+//
+//			participant.setEvent(new Event(Integer.valueOf(args[0])));
+//			participant.setUser(String.valueOf(callbackQuery.getFrom().getId()));
 			
-			boolean isPresent = participantService.checkParticipation(participant);
+			boolean isPresent = participantService.checkParticipation(callbackQuery.getFrom().getId(), 
+					Integer.valueOf(args[0]));
 
 			if (isPresent) {
 				sendMessage.setChatId(chat.getId()).setReplyToMessageId(callbackQuery.getMessage().getMessageId());
@@ -83,7 +86,7 @@ public class AddParticipationCommand extends BotAndCallbackCommand {
 				sendMessage.setReplyMarkup(replyMarkup);
 			} else {
 
-				participantService.insert(participant);
+				participantService.insert(callbackQuery.getFrom().getId(), Integer.valueOf(args[0]));
 
 				sendMessage.setChatId(chat.getId()).setReplyToMessageId(callbackQuery.getMessage().getMessageId());
 				sendMessage.setText(messageSource.getMessage("addparticipation.command.text.confirm", null, Locale.ITALIAN));

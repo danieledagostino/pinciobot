@@ -1,8 +1,10 @@
 package it.pincio.telegrambot.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -10,10 +12,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import it.pincio.persistence.bean.ChatUser;
 import it.pincio.persistence.bean.Event;
-import it.pincio.persistence.bean.Participant;
-import it.pincio.persistence.bean.ParticipantId;
-import it.pincio.persistence.dao.ParticipantRepository;
+import it.pincio.persistence.dao.ChatUserRepository;
 import it.pincio.telegrambot.dto.EventDto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,26 +23,22 @@ import lombok.extern.slf4j.Slf4j;
 public class ParticipantService {
 
 	@Autowired
-	ParticipantRepository participantRepository;
+	ChatUserRepository chatUserRepository;
 	
-	public boolean checkParticipation(String user, EventDto e) {
-		ParticipantId id = new ParticipantId(user, new Event(e.getId()));
-		Optional<Participant> p = participantRepository.findById(id);
+	public boolean checkParticipation(Integer userId, Integer eventId) {
+		ChatUser user = getUser(userId, eventId);
+		Example<ChatUser> example = Example.of(user);
 		
-		return p.isPresent();
+		Optional<ChatUser> chatUser = chatUserRepository.findOne(example);
+		
+		return chatUser.isPresent();
 		
 	}
 	
-	public boolean checkParticipation(Participant participant) {
-		Example<Participant> example = Example.of(participant);
-		Optional<Participant> p = participantRepository.findOne(example);
+	public void delete(Integer userId, Integer eventId) {
+		ChatUser user = getUser(userId, eventId);
 		
-		return p.isPresent();
-		
-	}
-	
-	public void delete(Participant participant) {
-		participantRepository.delete(participant);
+		chatUserRepository.delete(user);
 	}
 	
 	public InlineKeyboardMarkup prepareJoinMessage(List<EventDto> events, String command)
@@ -66,13 +63,26 @@ public class ParticipantService {
 		return replyMarkup;
 	}
 	
-	public boolean insert(Participant participant) {
-		Participant p = participantRepository.save(participant);
+	public boolean insert(Integer userId, Integer eventId) {
+		ChatUser user = getUser(userId, eventId);
 		
-		if (p == null) {
+		user = chatUserRepository.save(user);
+		
+		if (user == null) {
 			return false;
 		}
 		
 		return true;
+	}
+	
+	private ChatUser getUser(Integer userId, Integer eventId)
+	{
+		ChatUser user = new ChatUser();
+		Set<Event> events = new HashSet<Event>();
+		events.add(new Event(eventId));
+		user.setEvents(events);
+		user.setId(userId);
+		
+		return user;
 	}
 }

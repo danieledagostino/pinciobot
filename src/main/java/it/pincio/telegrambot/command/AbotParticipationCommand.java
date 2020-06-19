@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.extensions.bots.commandbot.commands.DefaultBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
@@ -14,8 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import it.pincio.persistence.bean.Event;
-import it.pincio.persistence.bean.Participant;
 import it.pincio.telegrambot.dto.EventDto;
 import it.pincio.telegrambot.service.EventService;
 import it.pincio.telegrambot.service.ParticipantService;
@@ -65,12 +62,8 @@ public class AbotParticipationCommand extends BotAndCallbackCommand {
 	}
 
 	private SendMessage process(Integer userId, String eventId) {
-		Participant participant = new Participant();
-
-		participant.setEvent(new Event(Integer.valueOf(eventId)));
-		participant.setUser(String.valueOf(userId));
 		
-		participantService.delete(participant);
+		participantService.delete(userId, Integer.valueOf(eventId));
 		
 		SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                 .setText(messageSource.getMessage("abortparticipation.command.text.confirm", null, Locale.ITALIAN));

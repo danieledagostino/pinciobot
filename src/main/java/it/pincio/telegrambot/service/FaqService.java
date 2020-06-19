@@ -11,11 +11,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import com.vdurmont.emoji.EmojiParser;
 
-import it.pincio.persistence.bean.Event;
 import it.pincio.persistence.bean.Faq;
-import it.pincio.persistence.bean.Participant;
 import it.pincio.persistence.dao.FaqRepository;
-import it.pincio.telegrambot.utility.EmojiiCode;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

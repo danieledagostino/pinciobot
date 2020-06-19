@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -76,6 +78,9 @@ public class Event implements Serializable{
 	@Column(name = "id_facebook")
 	private String idFacebook;	
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
-	Set<Participant> participants;
+	@JoinTable(name = "partecipanti",
+			joinColumns = @JoinColumn(name = "user"),
+					inverseJoinColumns = @JoinColumn(name = "id_evento"))
+	@OneToMany
+	Set<ChatUser> participants;
 }
