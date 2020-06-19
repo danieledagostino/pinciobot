@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import com.vdurmont.emoji.EmojiParser;
+
 import it.pincio.persistence.bean.Event;
 import it.pincio.persistence.dao.EventRepository;
 import it.pincio.telegrambot.dto.EventDto;
@@ -194,8 +196,13 @@ public class EventService {
 		
 		String label = messageSource.getMessage("eventlist.service.participant.label", null, Locale.ITALY);
 		
+		String eventTitle = null;
+		String numberOfParticipants = null;
+		
 		for (EventDto e : events) {
-			inlineKB = new InlineKeyboardButton(e.getTitle()+" "+label+" "+e.getNumberOfParticipants());
+			eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
+			numberOfParticipants = EmojiParser.parseToUnicode(":runner:"+" "+e.getNumberOfParticipants());
+			inlineKB = new InlineKeyboardButton(eventTitle+" "+numberOfParticipants);
 			inlineKB.setCallbackData("lista_eventi,"+e.getId());
 			
 			keyboardButtons = new ArrayList<InlineKeyboardButton>();

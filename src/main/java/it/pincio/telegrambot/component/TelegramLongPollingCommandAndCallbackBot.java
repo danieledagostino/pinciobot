@@ -46,12 +46,14 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 	
 	@Override
     public final void onUpdateReceived(Update update) {
-		Integer userId =  update.getMessage().getFrom().getId();
-		Chat chat = update.getMessage().getChat();
+		Integer userId =  null;
+		Chat chat = null;
 		Message message = null;
 		BotAndCallbackCommand botCommand = null;
 		boolean isValidCommand = false;
         if (update.hasMessage()) {
+        	userId =  update.getMessage().getFrom().getId();
+    		chat = update.getMessage().getChat();
             message = update.getMessage();
             if (message.isCommand() && !filter(message)) {
                 if (!commandRegistry.executeCommand(this, message)) {
@@ -86,7 +88,7 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 		}
         
         if (isValidCommand || update.hasCallbackQuery()) {
-	        if ((isValidCommand || (botCommand != null && botCommand.isPrivateAnswer())) && !chat.getId().equals(new Long(userId))) {
+	        if (botCommand.isPrivateAnswer() && !chat.getId().equals(new Long(userId))) {
 				SendMessage privateMessage = new SendMessage().setChatId(chat.getId())
 						.setText(messageSource.getMessage("command.msg.touser", 
 		                		Arrays.asList(USER_BOT, botCommand.getCommandIdentifier()).toArray(), Locale.ITALY));

@@ -9,6 +9,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import com.vdurmont.emoji.EmojiParser;
+
 import it.pincio.persistence.bean.Event;
 import it.pincio.persistence.bean.Faq;
 import it.pincio.persistence.bean.Participant;
@@ -32,7 +34,8 @@ public class FaqService {
 		List<InlineKeyboardButton> keyboardButtons = null;
 		InlineKeyboardButton inlineKB = null;
 		{
-			inlineKB = new InlineKeyboardButton(EmojiiCode.PENSIVE_FACE_ICON+"Questa risposta mi è stata utile!");
+			String WINKING_FACE_ICON = EmojiParser.parseToUnicode("&#128521; Questa risposta mi è stata utile!");
+			inlineKB = new InlineKeyboardButton(WINKING_FACE_ICON);
 			inlineKB.setCallbackData("conferma_risposta,"+faq.getId());
 			
 			keyboardButtons = new ArrayList<InlineKeyboardButton>();
@@ -40,7 +43,8 @@ public class FaqService {
 			keyboardRows.add(keyboardButtons);
 		}
 		{
-			inlineKB = new InlineKeyboardButton(EmojiiCode.WINKING_FACE_ICON+"Questa risposta non è stata utile!");
+			String PENSIVE_FACE_ICON = EmojiParser.parseToUnicode("&#128532; Questa risposta non è stata utile!");
+			inlineKB = new InlineKeyboardButton(PENSIVE_FACE_ICON);
 			inlineKB.setCallbackData("conferma_risposta,"+faq.getId());
 			
 			keyboardButtons = new ArrayList<InlineKeyboardButton>();

@@ -15,9 +15,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.vdurmont.emoji.EmojiParser;
+
 import it.pincio.persistence.bean.Event;
 import it.pincio.telegrambot.dto.EventDto;
 import it.pincio.telegrambot.service.EventService;
+import it.pincio.telegrambot.utility.EmojiiCode;
 import it.pincio.telegrambot.utility.TelegramKeyboard;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,11 +57,14 @@ public class EventNextCommand extends BotAndCallbackCommand {
 		
 		String label = messageSource.getMessage("eventlist.service.participant.label", null, Locale.ITALY);
 		
+		String eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
+		String numberOfParticipants = EmojiParser.parseToUnicode(":runner:"+" "+e.getNumberOfParticipants());
+		
 		SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                 .setChatId(chat.getId())
                 .setReplyToMessageId(messageId)
                 .setReplyMarkup(replyMarkup)
-                .setText(e.getTitle()+" "+dateToString(e.getStartDate())+"\n"+label+" "+e.getNumberOfParticipants()+"\n"+
+                .setText(eventTitle+" "+dateToString(e.getStartDate())+"\n"+numberOfParticipants+"\n"+
                 		e.getDescription());
         try {
         	absSender.execute(message); // Call method to send the message
