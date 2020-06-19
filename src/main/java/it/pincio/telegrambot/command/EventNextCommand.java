@@ -1,12 +1,13 @@
 package it.pincio.telegrambot.command;
 
+import static it.pincio.telegrambot.utility.DateUtils.dateToString;
+
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.extensions.bots.commandbot.commands.DefaultBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
@@ -17,14 +18,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.vdurmont.emoji.EmojiParser;
 
-import it.pincio.persistence.bean.Event;
 import it.pincio.telegrambot.dto.EventDto;
 import it.pincio.telegrambot.service.EventService;
-import it.pincio.telegrambot.utility.EmojiiCode;
+import it.pincio.telegrambot.service.ParticipantService;
 import it.pincio.telegrambot.utility.TelegramKeyboard;
 import lombok.extern.slf4j.Slf4j;
-
-import static it.pincio.telegrambot.utility.DateUtils.dateToString;
 
 @Component
 @Slf4j
@@ -43,6 +41,9 @@ public class EventNextCommand extends BotAndCallbackCommand {
 	@Autowired
 	MessageSource messageSource;
 	
+	@Autowired
+	ParticipantService participantService;
+	
 	public EventNextCommand() {
 		super(COMMAND_IDENTIFIER, COMMAND_DESCRIPTION);
 	}
@@ -52,10 +53,15 @@ public class EventNextCommand extends BotAndCallbackCommand {
 		// TODO Auto-generated method stub
 		
 		EventDto e = eventService.searchNextEvent();
+		boolean isParticipating = participantService.checkParticipation(String.valueOf(user.getId()), e);
 		
-		InlineKeyboardMarkup replyMarkup = TelegramKeyboard.makeOneRow("Partecipa!", "partecipa_evento,"+e.getId());
+		InlineKeyboardMarkup replyMarkup = null;
 		
-		String label = messageSource.getMessage("eventlist.service.participant.label", null, Locale.ITALY);
+		if (isParticipating) {
+			replyMarkup = TelegramKeyboard.makeOneRow("Rimuovi partecipazione!", "annulla_partecipazione,"+e.getId());
+		} else {
+			replyMarkup = TelegramKeyboard.makeOneRow("Partecipa!", "partecipa_evento,"+e.getId());
+		}
 		
 		String eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
 		String numberOfParticipants = EmojiParser.parseToUnicode(":runner:"+" "+e.getNumberOfParticipants());
