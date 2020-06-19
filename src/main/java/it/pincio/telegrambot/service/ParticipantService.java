@@ -44,7 +44,7 @@ public class ParticipantService {
 		participantRepository.delete(participant);
 	}
 	
-	public InlineKeyboardMarkup prepareJoinMessage(List<EventDto> events)
+	public InlineKeyboardMarkup prepareJoinMessage(List<EventDto> events, String command)
 	{
 		List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();
 		
@@ -54,7 +54,7 @@ public class ParticipantService {
 		
 		for (EventDto e : events) {
 			inlineKB = new InlineKeyboardButton(e.getTitle());
-			inlineKB.setCallbackData(String.valueOf(e.getId()));
+			inlineKB.setCallbackData(command+","+String.valueOf(e.getId()));
 			
 			keyboardButtons = new ArrayList<InlineKeyboardButton>();
 			keyboardButtons.add(inlineKB);

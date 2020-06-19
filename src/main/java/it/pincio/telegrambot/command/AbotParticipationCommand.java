@@ -42,7 +42,7 @@ public class AbotParticipationCommand extends BotAndCallbackCommand {
 		List<EventDto> events = eventService.searchCurrentEvents();
 
 		if (events.size() > 0) {
-			InlineKeyboardMarkup replyMarkup = participantService.prepareJoinMessage(events);
+			InlineKeyboardMarkup replyMarkup = participantService.prepareJoinMessage(events, COMMAND_IDENTIFIER);
 
 			SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
 					.setChatId(chat.getId()).setReplyMarkup(replyMarkup).setReplyToMessageId(messageId)
