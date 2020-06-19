@@ -1,25 +1,13 @@
 package it.pincio.telegrambot.command;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.extensions.bots.commandbot.commands.DefaultBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import it.pincio.persistence.bean.Event;
-import it.pincio.persistence.bean.Faq;
-import it.pincio.persistence.bean.Partecipant;
-import it.pincio.persistence.bean.PartecipantId;
-import it.pincio.telegrambot.service.AddParticipationService;
-import it.pincio.telegrambot.service.EventService;
 import it.pincio.telegrambot.service.FaqService;
 import lombok.extern.slf4j.Slf4j;
 

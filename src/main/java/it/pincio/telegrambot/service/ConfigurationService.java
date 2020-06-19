@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 
@@ -24,14 +25,17 @@ public class ConfigurationService {
 
 		List<BotCommand> botCommands = new ArrayList<BotCommand>();
 
-		List<Command> notInMaintenanceCommand = commandRepository.getAllActiveCommand();
+		Command command = new Command();
+		command.setIsInMaintenance("N");
+		Example<Command> example = Example.of(command);
+		List<Command> notInMaintenanceCommand = commandRepository.findAll(example);
 
 		Class<BotCommand> t = null;
 		BotCommand botCommand = null;
 		
-		for (Command command : notInMaintenanceCommand) {
+		for (Command c : notInMaintenanceCommand) {
 
-			t = (Class<BotCommand>)Class.forName("it.pincio.telegrambot.command." + command.getJavaCommandName());
+			t = (Class<BotCommand>)Class.forName("it.pincio.telegrambot.command." + c.getJavaCommandName());
 			botCommand = applicationContext.getBean(t);
 			botCommands.add(botCommand);
 		}

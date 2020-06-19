@@ -1,8 +1,10 @@
 package it.pincio.telegrambot.command;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.DefaultBotCommand;
@@ -16,8 +18,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import it.pincio.telegrambot.service.EventService;
 import it.pincio.telegrambot.utility.EmojiiCode;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class MyEventsCommand extends BotAndCallbackCommand {
 	
 	private static final String COMMAND_IDENTIFIER = "miei_eventi";
@@ -55,15 +59,15 @@ public class MyEventsCommand extends BotAndCallbackCommand {
 		SendMessage messageToInformUser = new SendMessage() // Create a SendMessage object with mandatory fields
                 .setChatId(chat.getId())
                 .setReplyToMessageId(messageId)
-                .setText("Apri la conversazione privata col bot @NewPincioBot (<- premi sul nome del bot), "+
-            			"premi 'Avvia' e lancia di nuovo il comando /miei_eventi");
+                .setText(messageSource.getMessage("myevent.command.msg.touser", 
+                		Arrays.asList(USER_BOT).toArray(), Locale.ITALY));
         try {
         	absSender.execute(messageToPrivateChat);
         	if (chat.isGroupChat()) {
         		absSender.execute(messageToInformUser); // Call method to send the message
         	}
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+        	log.error(messageSource.getMessage("log.telegram.send.error", null, Locale.ITALY), e);
         }
 	}
 

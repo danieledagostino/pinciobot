@@ -17,9 +17,10 @@ spring:
     username: ${DB_USER}
     driverClassName: com.mysql.cj.jdbc.Driver
     hikari:
-      connection-timeout: 30000
-      idle-timeout: 60000
-      max-lifetime: 60000
+      #connection-timeout: 30000
+      idle-timeout: 120000
+      max-lifetime: 120000
+      maximum-pool-size: 3
   jpa:
     hibernate:
       ddl-auto: none
@@ -32,3 +33,9 @@ spring:
             non_contextual_creation: true
     show-sql: false
   
+---
+spring:
+  profiles: local
+logging:
+  level:
+    ROOT: DEBUG

@@ -11,15 +11,20 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import it.pincio.persistence.bean.Event;
 import it.pincio.persistence.dao.EventRepository;
+import it.pincio.telegrambot.dto.EventDto;
 import it.pincio.telegrambot.utility.EmojiiCode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -118,8 +123,9 @@ public class EventService {
 		return returnMessage;
 	}
 	
-	public List<Event> searchCurrentEvents() {
-		return eventRepository.searchCurrentEvents();
+	@Transactional
+	public List<EventDto> searchCurrentEvents() {
+		return toDto(eventRepository.searchCurrentEvents());
 	}
 	
 	public InlineKeyboardMarkup searchMyEvents(Integer userId){
@@ -165,12 +171,20 @@ public class EventService {
 		return replyMarkup;
 	}
 	
-	public Event findById(Integer id) {
+	@Transactional
+	public EventDto findById(Integer id) {
 		Optional<Event> e = eventRepository.findById(id);
-		return e.get();
+		return toDto(e.get());
 	}
 	
-	public InlineKeyboardMarkup prepareJoinMessage(List<Event> events)
+	@Transactional
+	public EventDto searchNextEvent() {
+		Page<Event> page = eventRepository.searchNextEvent(PageRequest.of(0, 1));
+		
+		return toDto(page);
+	}
+	
+	public InlineKeyboardMarkup prepareJoinMessage(List<EventDto> events)
 	{
 		List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();
 		
@@ -178,8 +192,10 @@ public class EventService {
 		List<InlineKeyboardButton> keyboardButtons = null;
 		InlineKeyboardButton inlineKB = null;
 		
-		for (Event e : events) {
-			inlineKB = new InlineKeyboardButton(e.getTitle());
+		String label = messageSource.getMessage("eventlist.service.participant.label", null, Locale.ITALY);
+		
+		for (EventDto e : events) {
+			inlineKB = new InlineKeyboardButton(e.getTitle()+" "+label+" "+e.getNumberOfParticipants());
 			inlineKB.setCallbackData("lista_eventi,"+e.getId());
 			
 			keyboardButtons = new ArrayList<InlineKeyboardButton>();
@@ -190,5 +206,32 @@ public class EventService {
 		replyMarkup.setKeyboard(keyboardRows);
 		
 		return replyMarkup;
+	}
+	
+	private EventDto toDto(Event e) {
+		EventDto dto = new EventDto();
+		
+		dto.setId(e.getId());
+		dto.setTitle(e.getTitle());
+		dto.setDescription(e.getDescription());
+		dto.setStartDate(e.getStartDate());
+		dto.setNumberOfParticipants(e.getParticipants().size());
+		
+		return dto;
+	}
+	
+	private EventDto toDto(Page<Event> page) {
+		Event e = page.getContent().get(0);
+		return toDto(e);
+	}
+	
+	private List<EventDto> toDto(List<Event> list) {
+		List<EventDto> dtoList = new ArrayList<EventDto>();
+		
+		for (Event e : list) {
+			dtoList.add(toDto(e));
+		}
+		
+		return dtoList;
 	}
 }

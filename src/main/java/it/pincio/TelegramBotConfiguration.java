@@ -18,10 +18,8 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 
-import it.pincio.telegrambot.controller.FirstEntryPointTelegramBot;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration

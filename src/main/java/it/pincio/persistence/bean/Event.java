@@ -27,6 +27,14 @@ public class Event implements Serializable{
 
 	private static final long serialVersionUID = -5085471528148027217L;
 
+	public Event() {
+		
+	}
+	
+	public Event(Integer id) {
+		this.id = id;
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
@@ -66,6 +74,6 @@ public class Event implements Serializable{
 	@Column(name = "id_facebook")
 	private String idFacebook;	
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "partecipantId.event")
-	Set<Partecipant> partecipants = new HashSet<Partecipant>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+	Set<Participant> participants;
 }

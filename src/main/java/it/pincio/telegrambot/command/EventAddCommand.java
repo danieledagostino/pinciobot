@@ -1,6 +1,9 @@
 package it.pincio.telegrambot.command;
 
+import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.DefaultBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,8 +14,10 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import it.pincio.telegrambot.service.EventService;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class EventAddCommand extends BotAndCallbackCommand {
 	
 	private static final String COMMAND_IDENTIFIER = "aggiungi_evento";
@@ -39,7 +44,7 @@ public class EventAddCommand extends BotAndCallbackCommand {
         try {
         	absSender.execute(message); // Call method to send the message
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error(messageSource.getMessage("log.telegram.send.error", null, Locale.ITALY), e);
         }
 	}
 

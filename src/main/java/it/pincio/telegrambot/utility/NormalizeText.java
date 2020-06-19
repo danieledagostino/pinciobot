@@ -16,9 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NormalizeText {
 	
-	@Value("${WORD_MIN_LENGHT}")
-	private static Boolean WORD_MIN_LENGHT;
-
 	public static String execute(String text) throws IOException
 	{
 	    Map<String, String> charConverter = new HashMap<String, String>();
