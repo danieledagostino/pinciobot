@@ -29,4 +29,7 @@ public class Command implements Serializable{
 	
 	@Column(name = "nome_comando_java")
 	private String javaCommandName;
+	
+	@Column(name = "risposta_privata")
+	private String privateAnswer;
 }

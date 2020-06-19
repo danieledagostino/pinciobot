@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AddParticipationCommand extends BotAndCallbackCommand {
 
 	private static final String COMMAND_IDENTIFIER = "partecipa_evento";
-	private static final String COMMAND_DESCRIPTION = "shows all commands. Use /help [command] for more info";
+	private static final String COMMAND_DESCRIPTION = "Aderisci ad un evento. Usa /help "+COMMAND_IDENTIFIER+" per maggiori info";
 	private static final String EXTENDED_DESCRIPTION = "This command displays all commands the bot has to offer.\n /help [command] can display deeper information";
 
 	@Autowired
@@ -49,7 +49,7 @@ public class AddParticipationCommand extends BotAndCallbackCommand {
 
 			SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
 					.setChatId(chat.getId()).setReplyMarkup(replyMarkup).setReplyToMessageId(messageId)
-					.setText("Scegli l'evento al quale partecipare");
+					.setText(messageSource.getMessage("addparticipation.command.text.choose", null, Locale.ITALIAN));
 
 			try {
 				absSender.execute(message); // Call method to send the message

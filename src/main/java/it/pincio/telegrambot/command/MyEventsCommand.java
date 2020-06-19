@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MyEventsCommand extends BotAndCallbackCommand {
 	
 	private static final String COMMAND_IDENTIFIER = "miei_eventi";
-	private static final String COMMAND_DESCRIPTION = "shows all commands. Use /help [command] for more info";
+	private static final String COMMAND_DESCRIPTION = "Mostra gli eventi personali. Usa /help "+COMMAND_IDENTIFIER+" per maggiori info";
 	private static final String EXTENDED_DESCRIPTION = "This command displays all commands the bot has to offer.\n /help [command] can display deeper information";
 	
 	@Autowired
@@ -55,17 +55,8 @@ public class MyEventsCommand extends BotAndCallbackCommand {
                 .setText(messageSource.getMessage("myevent.command.list", emojii, Locale.ITALY));
 		
 		
-		//send message to the user to inform to switch to the private chat
-		SendMessage messageToInformUser = new SendMessage() // Create a SendMessage object with mandatory fields
-                .setChatId(chat.getId())
-                .setReplyToMessageId(messageId)
-                .setText(messageSource.getMessage("myevent.command.msg.touser", 
-                		Arrays.asList(USER_BOT).toArray(), Locale.ITALY));
         try {
         	absSender.execute(messageToPrivateChat);
-        	if (chat.isGroupChat()) {
-        		absSender.execute(messageToInformUser); // Call method to send the message
-        	}
         } catch (TelegramApiException e) {
         	log.error(messageSource.getMessage("log.telegram.send.error", null, Locale.ITALY), e);
         }

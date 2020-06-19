@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EventAddCommand extends BotAndCallbackCommand {
 	
 	private static final String COMMAND_IDENTIFIER = "aggiungi_evento";
-	private static final String COMMAND_DESCRIPTION = "shows all commands. Use /help [command] for more info";
+	private static final String COMMAND_DESCRIPTION = "Crea il tuo personale evento. Usa /help "+COMMAND_IDENTIFIER+" per maggiori info";
 	private static final String EXTENDED_DESCRIPTION = "This command displays all commands the bot has to offer.\n /help [command] can display deeper information";
 	
 	@Autowired
@@ -33,7 +33,6 @@ public class EventAddCommand extends BotAndCallbackCommand {
 
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, Integer messageId, String[] arguments) {
-		
 		
 		String returnMessage = eventService.processRequest(String.valueOf(user.getId()), arguments);
 		

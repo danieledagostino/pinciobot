@@ -28,7 +28,7 @@ import static it.pincio.telegrambot.utility.DateUtils.dateToString;
 public class EventNextCommand extends BotAndCallbackCommand {
 	
 	private static final String COMMAND_IDENTIFIER = "prossimo_evento";
-	private static final String COMMAND_DESCRIPTION = "shows all commands. Use /help [command] for more info";
+	private static final String COMMAND_DESCRIPTION = "Mostra il prossimo imminente evento. Usa /help "+COMMAND_IDENTIFIER+" per maggiori info";
 	private static final String EXTENDED_DESCRIPTION = "This command displays all commands the bot has to offer.\n /help [command] can display deeper information";
 	
 	@Value("${USER_BOT}")

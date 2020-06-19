@@ -11,6 +11,7 @@ import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 
 import it.pincio.persistence.bean.Command;
 import it.pincio.persistence.dao.CommandRepository;
+import it.pincio.telegrambot.command.BotAndCallbackCommand;
 
 @Service
 public class ConfigurationService {
@@ -21,22 +22,23 @@ public class ConfigurationService {
 	@Autowired 
 	private ApplicationContext applicationContext;
 
-	public List<BotCommand> getAllCommands() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public List<BotAndCallbackCommand> getAllCommands() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
-		List<BotCommand> botCommands = new ArrayList<BotCommand>();
+		List<BotAndCallbackCommand> botCommands = new ArrayList<BotAndCallbackCommand>();
 
 		Command command = new Command();
 		command.setIsInMaintenance("N");
 		Example<Command> example = Example.of(command);
 		List<Command> notInMaintenanceCommand = commandRepository.findAll(example);
 
-		Class<BotCommand> t = null;
-		BotCommand botCommand = null;
+		Class<BotAndCallbackCommand> t = null;
+		BotAndCallbackCommand botCommand = null;
 		
 		for (Command c : notInMaintenanceCommand) {
 
-			t = (Class<BotCommand>)Class.forName("it.pincio.telegrambot.command." + c.getJavaCommandName());
+			t = (Class<BotAndCallbackCommand>)Class.forName("it.pincio.telegrambot.command." + c.getJavaCommandName());
 			botCommand = applicationContext.getBean(t);
+			botCommand.setIsPrivateAnswer(c.getPrivateAnswer().equals("Y"));
 			botCommands.add(botCommand);
 		}
 

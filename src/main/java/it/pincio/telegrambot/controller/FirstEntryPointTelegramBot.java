@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
+import org.telegram.telegrambots.extensions.bots.commandbot.commands.helpCommand.HelpCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -19,6 +20,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.util.WebhookUtils;
 
 import it.pincio.persistence.bean.Faq;
+import it.pincio.telegrambot.command.BotAndCallbackCommand;
 import it.pincio.telegrambot.component.TelegramLongPollingCommandAndCallbackBot;
 import it.pincio.telegrambot.service.ConfigurationService;
 import it.pincio.telegrambot.service.PublicChatService;
@@ -70,7 +72,7 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingCommandAndCal
 
 	@PostConstruct
 	public void registerBot() {
-		List<BotCommand> commands = new ArrayList<BotCommand>();
+		List<BotAndCallbackCommand> commands = new ArrayList<BotAndCallbackCommand>();
 		try {
 			commands = configurationService.getAllCommands();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -80,6 +82,8 @@ public class FirstEntryPointTelegramBot extends TelegramLongPollingCommandAndCal
 		for (BotCommand botCommand : commands) {
 			register(botCommand);
 		}
+		
+		register(new HelpCommand());
 	}
 
 	@Override

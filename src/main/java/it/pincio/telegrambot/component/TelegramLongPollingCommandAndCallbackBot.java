@@ -1,14 +1,20 @@
 package it.pincio.telegrambot.component;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
+import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.CommandRegistry;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.ICommandRegistry;
@@ -32,23 +38,42 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 
 	private final String CALLBACKDATA_ARGS_SEPARATOR = ",";
 	
+	@Autowired
+	protected MessageSource messageSource;
+	
+	@Value("${USER_BOT}")
+	protected String USER_BOT;
+	
 	@Override
     public final void onUpdateReceived(Update update) {
+		Integer userId =  update.getMessage().getFrom().getId();
+		Chat chat = update.getMessage().getChat();
+		Message message = null;
+		BotAndCallbackCommand botCommand = null;
+		boolean isValidCommand = false;
         if (update.hasMessage()) {
-            Message message = update.getMessage();
+            message = update.getMessage();
             if (message.isCommand() && !filter(message)) {
                 if (!commandRegistry.executeCommand(this, message)) {
                     //we have received a not registered command, handle it as invalid
                     processInvalidCommandUpdate(update);
+                }else {
+                	isValidCommand = true;
+                	String text = message.getText();
+                	String commandMessage = text.substring(1);
+                    String[] commandSplit = commandMessage.split(BotCommand.COMMAND_PARAMETER_SEPARATOR_REGEXP);
+
+                    String command = removeUsernameFromCommandIfNeeded(commandSplit[0]);
+                	botCommand = getRegisteredCommand(command);
                 }
-                return;
             }
         } else if (update.hasCallbackQuery()) {
 			CallbackQuery cb = update.getCallbackQuery();
 			String[] args = cb.getData().split(CALLBACKDATA_ARGS_SEPARATOR);
-			
+			userId = cb.getFrom().getId();
+			chat = cb.getMessage().getChat();
 			try {
-				BotAndCallbackCommand botCommand = getRegisteredCommand(args[0]);
+				botCommand = getRegisteredCommand(args[0]);
 				SendMessage sendMessage = botCommand.processCallback(cb, args[1]);
 				
 				execute(sendMessage);
@@ -58,8 +83,22 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 				log.error("Message not sent", e);
 			}
 			
-            return;
 		}
+        
+        if (isValidCommand || update.hasCallbackQuery()) {
+	        if ((isValidCommand || (botCommand != null && botCommand.isPrivateAnswer())) && !chat.getId().equals(new Long(userId))) {
+				SendMessage privateMessage = new SendMessage().setChatId(chat.getId())
+						.setText(messageSource.getMessage("command.msg.touser", 
+		                		Arrays.asList(USER_BOT, botCommand.getCommandIdentifier()).toArray(), Locale.ITALY));
+				try {
+					execute(privateMessage);
+				} catch (TelegramApiException e) {
+					log.error("Private message to inform the user not sent", e);
+				}
+			}
+	        return;
+        }
+        
         processNonCommandUpdate(update);
     }
 	

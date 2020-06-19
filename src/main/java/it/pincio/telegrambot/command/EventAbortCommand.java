@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class EventAbortCommand extends BotAndCallbackCommand {
 	
 	private static final String COMMAND_IDENTIFIER = "annulla_evento";
-	private static final String COMMAND_DESCRIPTION = "shows all commands. Use /help [command] for more info";
+	private static final String COMMAND_DESCRIPTION = "Annulla un evento al quale avevi dato adesione. Usa /help "+COMMAND_IDENTIFIER+" per maggiori info";
 	private static final String EXTENDED_DESCRIPTION = "This command displays all commands the bot has to offer.\n /help [command] can display deeper information";
 	
 	public EventAbortCommand() {

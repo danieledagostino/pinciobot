@@ -15,10 +15,19 @@ public abstract class BotAndCallbackCommand extends DefaultBotCommand {
 	@Value("${USER_BOT}")
 	protected String USER_BOT;
 	
+	private boolean isPrivateAnswer = false;
+	
 	public BotAndCallbackCommand(String commandIdentifier, String description) {
 		super(commandIdentifier, description);
 	}
 	
 	public abstract SendMessage processCallback(CallbackQuery callbackQuery, String... args);
 
+	public boolean isPrivateAnswer() {
+		return this.isPrivateAnswer;
+	}
+	
+	public void setIsPrivateAnswer(boolean isPrivateAnswer) {
+		this.isPrivateAnswer = isPrivateAnswer;
+	}
 }

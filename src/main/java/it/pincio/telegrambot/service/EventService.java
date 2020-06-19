@@ -54,11 +54,11 @@ public class EventService {
 			step = events.get(0).getStep();
 		}
 		
-		if ((step == 1 || step == 2 || step == 3) && "".equals(args[0].trim())) {
+		if ((step == 1 || step == 2 || step == 3) && args.length == 0) {
 			returnMessage = messageSource.getMessage("event.service.add.error", null, Locale.ITALY);
 		} else if (step == 0){
 			
-				if ("".equals(args[0].trim())) {
+				if (args.length == 0) {
 					returnMessage = "Non hai scritto il titolo. Invoca di nuovo il comando scrivendo /aggiungi_evento spazio titolo";
 				} else {
 			
