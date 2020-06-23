@@ -1,9 +1,4 @@
-/target/test-classes
-/target/classes
-/target/generated-sources
-/target/generated-test-sources
-/target/maven-archiver
-/target/maven-status
+/target/
 
 ### STS ###
 .apt_generated
@@ -15,3 +10,4 @@
 .sts4-cache
 .env
 hibernate.properties
+heroku_config_set.bat
