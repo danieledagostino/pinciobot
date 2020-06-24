@@ -57,13 +57,18 @@ public class EventNextCommand extends BotAndCallbackCommand {
 		
 		InlineKeyboardMarkup replyMarkup = null;
 		
-		if (isParticipating) {
-			replyMarkup = TelegramKeyboard.makeOneRow("Rimuovi partecipazione!", "annulla_partecipazione,"+e.getId());
+		String eventTitle = null;
+		if (e.getFacebookId().equals("")) {
+			eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
+			if (isParticipating) {
+				replyMarkup = TelegramKeyboard.makeOneRow("Rimuovi partecipazione!", "annulla_partecipazione,"+e.getId());
+			} else {
+				replyMarkup = TelegramKeyboard.makeOneRow("Partecipa!", "partecipa_evento,"+e.getId());
+			}
 		} else {
-			replyMarkup = TelegramKeyboard.makeOneRow("Partecipa!", "partecipa_evento,"+e.getId());
+			eventTitle = EmojiParser.parseToUnicode(":blue_book:"+" "+e.getTitle());
 		}
 		
-		String eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
 		String numberOfParticipants = EmojiParser.parseToUnicode(":runner:"+" "+e.getNumberOfParticipants());
 		
 		SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields

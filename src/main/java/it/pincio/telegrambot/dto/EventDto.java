@@ -12,4 +12,5 @@ public class EventDto {
 	private String description;
 	private Date startDate;
 	private Integer numberOfParticipants;
+	private String facebookId;
 }

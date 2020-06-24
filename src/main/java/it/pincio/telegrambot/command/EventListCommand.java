@@ -68,25 +68,30 @@ public class EventListCommand extends BotAndCallbackCommand {
 		
 		EventDto e = eventService.findById(Integer.valueOf(args[0]));
 		
-		boolean isParticipating = participantService.checkParticipation(callbackQuery.getFrom().getId(), e.getId());
-		
-		InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
-		List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();
-		
-		InlineKeyboardButton btPartecipa = null;
-		if (isParticipating) {
-			btPartecipa = new InlineKeyboardButton("Rimuovi partecipazione");
-			btPartecipa.setCallbackData("annulla_partecipazione,"+e.getId());
+		if ("".equals(e.getFacebookId())) {
+			sendMessage.setText("Questo è un evento generato su facebook. Non è possibile registrarsi a questo evento da qui.");
 		} else {
-			btPartecipa = new InlineKeyboardButton("Partecipa");
-			btPartecipa.setCallbackData("partecipa_evento,"+e.getId());
+		
+			boolean isParticipating = participantService.checkParticipation(callbackQuery.getFrom().getId(), e.getId());
+			
+			InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
+			List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();
+			
+			InlineKeyboardButton btPartecipa = null;
+			if (isParticipating) {
+				btPartecipa = new InlineKeyboardButton("Rimuovi partecipazione");
+				btPartecipa.setCallbackData("annulla_partecipazione,"+e.getId());
+			} else {
+				btPartecipa = new InlineKeyboardButton("Partecipa");
+				btPartecipa.setCallbackData("partecipa_evento,"+e.getId());
+			}
+			keyboardRows.add(Arrays.asList(btPartecipa));
+			
+			
+			replyMarkup.setKeyboard(keyboardRows);
+			sendMessage.setReplyMarkup(replyMarkup);
+			sendMessage.setText(e.getDescription());
 		}
-		keyboardRows.add(Arrays.asList(btPartecipa));
-		
-		
-		replyMarkup.setKeyboard(keyboardRows);
-		sendMessage.setReplyMarkup(replyMarkup);
-		sendMessage.setText(e.getDescription());
 		
 		sendMessage.setChatId(String.valueOf(callbackQuery.getFrom().getId()));
 		return sendMessage;

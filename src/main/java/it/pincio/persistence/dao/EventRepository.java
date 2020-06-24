@@ -31,6 +31,6 @@ public interface EventRepository extends JpaRepository<Event, Integer>
 	List<Event> searchMyUncompleteEvents(@Param("idUser") String idUser);
 	
 	//needs to specify alias with pagination
-	@Query("from Event e where e.startDate > current_date() and e.step = 3")
+	@Query("from Event e where e.startDate > current_date() and e.step = 3 and e.cancelled = 'N'")
 	Page<Event> searchNextEvent(Pageable pageable);
 }

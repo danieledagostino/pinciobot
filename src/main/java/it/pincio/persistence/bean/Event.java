@@ -76,7 +76,7 @@ public class Event implements Serializable{
 	private Integer step;
 	
 	@Column(name = "id_facebook")
-	private String idFacebook;	
+	private String facebookId;	
 	
 	@JoinTable(name = "partecipanti",
 			joinColumns = @JoinColumn(name = "user"),
