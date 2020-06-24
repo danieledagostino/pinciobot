@@ -36,7 +36,7 @@ public class NormalizeText {
 	    
 	 // load stopwords from file
 	    File stopwords = ResourceUtils.getFile(
-			      "stopwords.txt");
+			      "classpath:stopwords.txt");
 	    
 	    FileReader fr=new FileReader(stopwords);   //reads the file  
 	    BufferedReader br=new BufferedReader(fr);  //creates a buffering character input stream  
