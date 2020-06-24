@@ -15,6 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -30,9 +31,11 @@ import lombok.extern.slf4j.Slf4j;
 	@ComponentScan("it.pincio.telegrambot.service"),
 	@ComponentScan("it.pincio.persistence.dao"),
 	@ComponentScan("it.pincio.telegrambot.command"),
-	@ComponentScan("it.pincio.telegrambot.utility")
+	@ComponentScan("it.pincio.telegrambot.utility"),
+	@ComponentScan("it.pincio.webapp.controller")
 })
 @Slf4j
+@EnableWebMvc
 public class TelegramBotConfiguration {
 	
 	private static BotSession session;
