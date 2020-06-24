@@ -53,35 +53,38 @@ public class EventNextCommand extends BotAndCallbackCommand {
 		// TODO Auto-generated method stub
 		
 		EventDto e = eventService.searchNextEvent();
-		boolean isParticipating = participantService.checkParticipation(user.getId(), e.getId());
 		
-		InlineKeyboardMarkup replyMarkup = null;
-		
-		String eventTitle = null;
-		if (e.getFacebookId().equals("")) {
-			eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
-			if (isParticipating) {
-				replyMarkup = TelegramKeyboard.makeOneRow("Rimuovi partecipazione!", "annulla_partecipazione,"+e.getId());
+		if (e != null) {
+			boolean isParticipating = participantService.checkParticipation(user.getId(), e.getId());
+			
+			InlineKeyboardMarkup replyMarkup = null;
+			
+			String eventTitle = null;
+			if (e.getFacebookId().equals("")) {
+				eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
+				if (isParticipating) {
+					replyMarkup = TelegramKeyboard.makeOneRow("Rimuovi partecipazione!", "annulla_partecipazione,"+e.getId());
+				} else {
+					replyMarkup = TelegramKeyboard.makeOneRow("Partecipa!", "partecipa_evento,"+e.getId());
+				}
 			} else {
-				replyMarkup = TelegramKeyboard.makeOneRow("Partecipa!", "partecipa_evento,"+e.getId());
+				eventTitle = EmojiParser.parseToUnicode(":blue_book:"+" "+e.getTitle());
 			}
-		} else {
-			eventTitle = EmojiParser.parseToUnicode(":blue_book:"+" "+e.getTitle());
+			
+			String numberOfParticipants = EmojiParser.parseToUnicode(":runner:"+" "+e.getNumberOfParticipants());
+			
+			SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+	                .setChatId(chat.getId())
+	                .setReplyToMessageId(messageId)
+	                .setReplyMarkup(replyMarkup)
+	                .setText(eventTitle+" "+dateToString(e.getStartDate())+"\n"+numberOfParticipants+"\n"+
+	                		e.getDescription());
+	        try {
+	        	absSender.execute(message); // Call method to send the message
+	        } catch (TelegramApiException ex) {
+	        	log.error(messageSource.getMessage("log.telegram.send.error", null, Locale.ITALY), ex);
+	        }
 		}
-		
-		String numberOfParticipants = EmojiParser.parseToUnicode(":runner:"+" "+e.getNumberOfParticipants());
-		
-		SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
-                .setChatId(chat.getId())
-                .setReplyToMessageId(messageId)
-                .setReplyMarkup(replyMarkup)
-                .setText(eventTitle+" "+dateToString(e.getStartDate())+"\n"+numberOfParticipants+"\n"+
-                		e.getDescription());
-        try {
-        	absSender.execute(message); // Call method to send the message
-        } catch (TelegramApiException ex) {
-        	log.error(messageSource.getMessage("log.telegram.send.error", null, Locale.ITALY), ex);
-        }
 	}
 
 	@Override

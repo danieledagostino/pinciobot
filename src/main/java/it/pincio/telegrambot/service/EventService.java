@@ -28,6 +28,7 @@ import it.pincio.persistence.bean.Event;
 import it.pincio.persistence.dao.EventRepository;
 import it.pincio.telegrambot.dto.EventDto;
 import it.pincio.telegrambot.utility.EmojiiCode;
+import it.pincio.telegrambot.utility.TelegramKeyboard;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -200,7 +201,11 @@ public class EventService {
 		String numberOfParticipants = null;
 		
 		for (EventDto e : events) {
-			eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
+			if ("".equals(e.getFacebookId())) {
+				eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
+			} else {
+				eventTitle = EmojiParser.parseToUnicode(":blue_book:"+" "+e.getTitle());
+			}
 			numberOfParticipants = EmojiParser.parseToUnicode(":runner:"+" "+e.getNumberOfParticipants());
 			inlineKB = new InlineKeyboardButton(eventTitle+" "+numberOfParticipants);
 			inlineKB.setCallbackData("lista_eventi,"+e.getId());
@@ -223,6 +228,7 @@ public class EventService {
 		dto.setDescription(e.getDescription());
 		dto.setStartDate(e.getStartDate());
 		dto.setNumberOfParticipants(e.getParticipants().size());
+		dto.setFacebookId(e.getFacebookId());
 		
 		return dto;
 	}
