@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,18 +37,21 @@ public class NormalizeText {
 		}
 	    
 	 // load stopwords from file
-	    File stopwords = ResourceUtils.getFile(
-			      "classpath:stopwords.txt");
-	    
-	    FileReader fr=new FileReader(stopwords);   //reads the file  
-	    BufferedReader br=new BufferedReader(fr);  //creates a buffering character input stream  
-	    String line = null;  
-	    while((line=br.readLine())!=null)  
-	    {  
-	    	text = text.replaceAll(line, "");
-	    }
-	    
-	    fr.close(); 
+	    try {
+		    InputStream stopwords = NormalizeText.class.getResourceAsStream("stopwords.txt");
+		    
+		    InputStreamReader isr = new InputStreamReader(stopwords);
+		    BufferedReader br=new BufferedReader(isr);  //creates a buffering character input stream  
+		    String line = null;  
+		    while((line=br.readLine())!=null)  
+		    {  
+		    	text = text.replaceAll(line, "");
+		    }
+		    
+		    isr.close(); 
+	    }catch (Exception e) {
+			log.error("stopwords.txt not loaded", e);
+		}
 	    
 		log.info("Normalize text: "+text);
 	    return text; 

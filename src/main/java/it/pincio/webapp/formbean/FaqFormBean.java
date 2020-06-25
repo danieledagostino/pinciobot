@@ -8,7 +8,7 @@ public class FaqFormBean implements Serializable {
 	
 	private String id;
 	private String domanda;
-	private String parola;
+	private String parole;
 	private String risposta;
 	private String attivo;
 	
@@ -18,11 +18,11 @@ public class FaqFormBean implements Serializable {
 	public void setDomanda(String domanda) {
 		this.domanda = domanda;
 	}
-	public String getParola() {
-		return parola;
+	public String getParole() {
+		return parole;
 	}
-	public void setParola(String parola) {
-		this.parola = parola;
+	public void setParole(String parole) {
+		this.parole = parole;
 	}
 	public String getRisposta() {
 		return risposta;
