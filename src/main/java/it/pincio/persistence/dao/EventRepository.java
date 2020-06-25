@@ -18,7 +18,7 @@ public interface EventRepository extends JpaRepository<Event, Integer>
 	@Query("from Event where owner = :idUser and step > 0 and step < 3 and DATE(insertDate) = current_date()")
 	List<Event> searchByCurrentDate(@Param("idUser") String idUser);
 	
-	@Query("from Event e where e.startDate > current_date() and e.step = 3 and e.cancelled = 'N'")
+	@Query("from Event e where e.startDate > current_date() and e.step = 3 and e.cancelled = 'N' order by e.startDate")
 	List<Event> searchCurrentEvents();
 	
 	@Query("from Event where owner = :idUser and startDate < current_date() order by insertDate desc")
@@ -31,6 +31,6 @@ public interface EventRepository extends JpaRepository<Event, Integer>
 	List<Event> searchMyUncompleteEvents(@Param("idUser") String idUser);
 	
 	//needs to specify alias with pagination
-	@Query("from Event e where e.startDate > current_date() and e.step = 3 and e.cancelled = 'N'")
+	@Query("from Event e where e.startDate > current_date() and e.step = 3 and e.cancelled = 'N' order by e.startDate")
 	Page<Event> searchNextEvent(Pageable pageable);
 }
