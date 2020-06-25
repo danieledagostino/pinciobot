@@ -82,7 +82,9 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 			}catch (NullPointerException e) {
 				log.error("Command {} not implemented yet", args[0]);
 			}catch (TelegramApiException e) {
-				log.error("Message not sent", e);
+				log.error("Message not sent for the callback", e);
+			}catch (Exception e) {
+				log.error("Generic error during send the message for the callback", e);
 			}
 			
 		}
@@ -96,6 +98,8 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 					execute(privateMessage);
 				} catch (TelegramApiException e) {
 					log.error("Private message to inform the user not sent", e);
+				} catch (Exception e) {
+					log.error("Generic error during send the message if the chat comes from public group", e);
 				}
 			}
 	        return;
