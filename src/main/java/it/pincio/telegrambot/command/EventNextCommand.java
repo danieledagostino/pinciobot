@@ -52,7 +52,12 @@ public class EventNextCommand extends BotAndCallbackCommand {
 	public void execute(AbsSender absSender, User user, Chat chat, Integer messageId, String[] arguments) {
 		// TODO Auto-generated method stub
 		
-		EventDto e = eventService.searchNextEvent();
+		EventDto e = null;
+		try {
+			e = eventService.searchNextEvent();
+		} catch (Exception ex) {
+			log.error("Error during get of next event", ex);
+		}
 		
 		if (e != null) {
 			boolean isParticipating = participantService.checkParticipation(user.getId(), e.getId());
@@ -60,7 +65,7 @@ public class EventNextCommand extends BotAndCallbackCommand {
 			InlineKeyboardMarkup replyMarkup = null;
 			
 			String eventTitle = null;
-			if (e.getFacebookId().equals("")) {
+			if (e.getFacebookId() == null) {
 				eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
 				if (isParticipating) {
 					replyMarkup = TelegramKeyboard.makeOneRow("Rimuovi partecipazione!", "annulla_partecipazione,"+e.getId());

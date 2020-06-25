@@ -181,7 +181,7 @@ public class EventService {
 	}
 	
 	@Transactional
-	public EventDto searchNextEvent() {
+	public EventDto searchNextEvent() throws Exception {
 		Page<Event> page = eventRepository.searchNextEvent(PageRequest.of(0, 1));
 		
 		return toDto(page);
@@ -201,7 +201,7 @@ public class EventService {
 		String numberOfParticipants = null;
 		
 		for (EventDto e : events) {
-			if ("".equals(e.getFacebookId())) {
+			if (e.getFacebookId() == null) {
 				eventTitle = EmojiParser.parseToUnicode(":ticket:"+" "+e.getTitle());
 			} else {
 				eventTitle = EmojiParser.parseToUnicode(":blue_book:"+" "+e.getTitle());
