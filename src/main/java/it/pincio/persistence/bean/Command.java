@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "manutenzione")
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 public class Command implements Serializable{
 
 	private static final long serialVersionUID = -6498257175228844443L;
@@ -32,4 +29,37 @@ public class Command implements Serializable{
 	
 	@Column(name = "risposta_privata")
 	private String privateAnswer;
+
+	public String getCommandName() {
+		return commandName;
+	}
+
+	public void setCommandName(String commandName) {
+		this.commandName = commandName;
+	}
+
+	public String getIsInMaintenance() {
+		return isInMaintenance;
+	}
+
+	public void setIsInMaintenance(String isInMaintenance) {
+		this.isInMaintenance = isInMaintenance;
+	}
+
+	public String getJavaCommandName() {
+		return javaCommandName;
+	}
+
+	public void setJavaCommandName(String javaCommandName) {
+		this.javaCommandName = javaCommandName;
+	}
+
+	public String getPrivateAnswer() {
+		return privateAnswer;
+	}
+
+	public void setPrivateAnswer(String privateAnswer) {
+		this.privateAnswer = privateAnswer;
+	}
+	
 }

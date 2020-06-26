@@ -52,6 +52,7 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 		Chat chat = null;
 		Message message = null;
 		BotAndCallbackCommand botCommand = null;
+		Integer messageId = null;
 		boolean isValidCommand = false;
         if (update.hasMessage()) {
         	userId =  update.getMessage().getFrom().getId();
@@ -72,6 +73,7 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
                 	
                 	log.info("Invoking command {}", command);
                 }
+                messageId = message.getMessageId();
             }
         } else if (update.hasCallbackQuery()) {
 			CallbackQuery cb = update.getCallbackQuery();
@@ -79,6 +81,7 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 			userId = cb.getFrom().getId();
 			chat = cb.getMessage().getChat();
 			SendMessage sendMessage = null;
+			messageId = cb.getMessage().getMessageId();
 			try {
 				botCommand = getRegisteredCommand(args[0]);
 				sendMessage = botCommand.processCallback(cb, args[1]);
@@ -103,9 +106,10 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 	        if (botCommand.isPrivateAnswer() && !chat.getId().equals(new Long(userId))) {
 	        	InlineKeyboardMarkup replyMarkup = TelegramKeyboard.makeOneRowWithLink("Premi qui", "https://t.me/"+USER_BOT);
 				SendMessage privateMessage = new SendMessage().setChatId(chat.getId())
+						.setReplyMarkup(replyMarkup)
+						.setReplyToMessageId(messageId)
 						.setText(messageSource.getMessage("command.msg.touser", 
 		                		Arrays.asList(botCommand.getCommandIdentifier()).toArray(), Locale.ITALY));
-				privateMessage.setReplyMarkup(replyMarkup);
 				try {
 					execute(privateMessage);
 				} catch (TelegramApiException e) {

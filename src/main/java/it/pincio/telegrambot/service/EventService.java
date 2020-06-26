@@ -24,7 +24,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import com.vdurmont.emoji.EmojiParser;
 
+import it.pincio.persistence.bean.ChatUser;
 import it.pincio.persistence.bean.Event;
+import it.pincio.persistence.dao.ChatUserRepository;
 import it.pincio.persistence.dao.EventRepository;
 import it.pincio.telegrambot.dto.EventDto;
 import it.pincio.telegrambot.utility.EmojiiCode;
@@ -43,6 +45,9 @@ public class EventService {
 	
 	@Autowired
 	EventRepository eventRepository;
+	
+	@Autowired
+	private ChatUserRepository chatUserRepository;
 	
 	public String processRequest(String idUser, String[] args)
 	{
@@ -65,9 +70,10 @@ public class EventService {
 					returnMessage = "Non hai scritto il titolo. Invoca di nuovo il comando scrivendo /aggiungi_evento spazio titolo";
 				} else {
 			
+					ChatUser owner = chatUserRepository.getOne(idUser);
 					Event event = new Event();
 					event.setTitle(args[0].trim());
-					event.setOwner(idUser);
+					event.setOwner(owner);
 					eventRepository.save(event);
 	
 					returnMessage = "Bene, hai inserito correttamente il titolo.\n"+
@@ -81,11 +87,12 @@ public class EventService {
 			
 			if (dateMatch.length == 5) {
 				
+				ChatUser owner = chatUserRepository.getOne(idUser);
 				ZoneId defaultZoneId = ZoneId.systemDefault();
 				
 				Event event = new Event();
 				event.setStep(1);
-				event.setOwner(idUser);
+				event.setOwner(owner);
 				
 				Example<Event> example = Example.of(event);
 				Optional<Event> optEvent = eventRepository.findOne(example);
@@ -105,9 +112,10 @@ public class EventService {
 			
 			}
 		} else if (step == 2) {
+			ChatUser owner = chatUserRepository.getOne(idUser);
 			Event event = new Event();
 			event.setStep(2);
-			event.setOwner(idUser);
+			event.setOwner(owner);
 			
 			Example<Event> example = Example.of(event);
 			Optional<Event> optEvent = eventRepository.findOne(example);

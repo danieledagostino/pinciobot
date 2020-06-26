@@ -13,11 +13,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +29,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "eventi")
-@Data
 @DynamicInsert
 public class Event implements Serializable{
 
@@ -65,8 +68,10 @@ public class Event implements Serializable{
 	@Column(name = "cancellato")
 	private String cancelled;
 	
-	@Column(name = "proprietario")
-	private String owner;
+	@JoinColumn(name = "proprietario", referencedColumnName = "id")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private ChatUser owner;
 	
 	@DateTimeFormat
 	@Column(name = "data_inserimento")
@@ -76,11 +81,114 @@ public class Event implements Serializable{
 	private Integer step;
 	
 	@Column(name = "id_facebook")
-	private String facebookId;	
+	private String facebookId;
 	
-	@JoinTable(name = "partecipanti",
-			joinColumns = @JoinColumn(name = "user"),
-					inverseJoinColumns = @JoinColumn(name = "id_evento"))
-	@OneToMany
+	@ManyToMany(mappedBy = "events", fetch = FetchType.LAZY)
+	@JsonIgnore
 	Set<ChatUser> participants;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getPlaceName() {
+		return placeName;
+	}
+
+	public void setPlaceName(String placeName) {
+		this.placeName = placeName;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getCancelled() {
+		return cancelled;
+	}
+
+	public void setCancelled(String cancelled) {
+		this.cancelled = cancelled;
+	}
+
+	public ChatUser getOwner() {
+		return owner;
+	}
+
+	public void setOwner(ChatUser owner) {
+		this.owner = owner;
+	}
+
+	public Date getInsertDate() {
+		return insertDate;
+	}
+
+	public void setInsertDate(Date insertDate) {
+		this.insertDate = insertDate;
+	}
+
+	public Integer getStep() {
+		return step;
+	}
+
+	public void setStep(Integer step) {
+		this.step = step;
+	}
+
+	public String getFacebookId() {
+		return facebookId;
+	}
+
+	public void setFacebookId(String facebookId) {
+		this.facebookId = facebookId;
+	}
+
+	public Set<ChatUser> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(Set<ChatUser> participants) {
+		this.participants = participants;
+	}
+	
 }

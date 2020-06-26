@@ -12,7 +12,6 @@ import lombok.Data;
 
 @Entity
 @Table(name = "faq")
-@Data
 public class Faq implements Serializable{
 
 	private static final long serialVersionUID = -3047990182101512244L;
@@ -28,4 +27,45 @@ public class Faq implements Serializable{
 	private String hint;
 	
 	private String active;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+	public String getHint() {
+		return hint;
+	}
+
+	public void setHint(String hint) {
+		this.hint = hint;
+	}
+
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
+	}
+	
 }
