@@ -89,6 +89,7 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 				log.error("Command {} not implemented yet", args[0]);
 			}catch (TelegramApiException e) {
 				log.error("<sendMessage>");
+				log.error("username: {}", cb.getFrom().getUserName());
 				log.error(sendMessage.toString());
 				log.error("</sendMessage>");
 				log.error("TelegramApiException: Message not sent for the callback");
