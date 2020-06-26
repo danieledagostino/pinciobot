@@ -24,6 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
@@ -31,6 +32,7 @@ import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.util.WebhookUtils;
 
 import it.pincio.telegrambot.command.BotAndCallbackCommand;
+import it.pincio.telegrambot.utility.TelegramKeyboard;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -67,6 +69,8 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 
                     String command = removeUsernameFromCommandIfNeeded(commandSplit[0]);
                 	botCommand = getRegisteredCommand(command);
+                	
+                	log.info("Invoking command {}", command);
                 }
             }
         } else if (update.hasCallbackQuery()) {
@@ -78,15 +82,16 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 			try {
 				botCommand = getRegisteredCommand(args[0]);
 				sendMessage = botCommand.processCallback(cb, args[1]);
+				log.info("Callback - Invoking command {}", args[0]);
 				
 				execute(sendMessage);
 			}catch (NullPointerException e) {
 				log.error("Command {} not implemented yet", args[0]);
 			}catch (TelegramApiException e) {
-				log.error("<sendMessage<");
+				log.error("<sendMessage>");
 				log.error(sendMessage.toString());
 				log.error("</sendMessage>");
-				log.error("Message not sent for the callback", e);
+				log.error("TelegramApiException: Message not sent for the callback");
 			}catch (Exception e) {
 				log.error("Generic error during send the message for the callback", e);
 			}
@@ -95,9 +100,11 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
         
         if (isValidCommand || update.hasCallbackQuery()) {
 	        if (botCommand.isPrivateAnswer() && !chat.getId().equals(new Long(userId))) {
+	        	InlineKeyboardMarkup replyMarkup = TelegramKeyboard.makeOneRowWithLink("Premi qui", "https://t.me/"+USER_BOT);
 				SendMessage privateMessage = new SendMessage().setChatId(chat.getId())
 						.setText(messageSource.getMessage("command.msg.touser", 
-		                		Arrays.asList(USER_BOT, botCommand.getCommandIdentifier()).toArray(), Locale.ITALY));
+		                		Arrays.asList(botCommand.getCommandIdentifier()).toArray(), Locale.ITALY));
+				privateMessage.setReplyMarkup(replyMarkup);
 				try {
 					execute(privateMessage);
 				} catch (TelegramApiException e) {

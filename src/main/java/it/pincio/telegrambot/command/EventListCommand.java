@@ -67,13 +67,13 @@ public class EventListCommand extends BotAndCallbackCommand {
 		Chat chat = callbackQuery.getMessage().getChat();
 		
 		EventDto e = eventService.findById(Integer.valueOf(args[0]));
-		
-		if ("".equals(e.getFacebookId())) {
-			sendMessage.setText("Questo è un evento generato su facebook. Non è possibile registrarsi a questo evento da qui.");
+		String addTextForFacebookEvent = "";
+
+		if (e.getFacebookId() != null) {
+			addTextForFacebookEvent = "\nQuesto è un evento generato su facebook. Non è possibile registrarsi a questo evento da qui.";
 		} else {
 		
 			boolean isParticipating = participantService.checkParticipation(callbackQuery.getFrom().getId(), e.getId());
-			
 			InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
 			List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();
 			
@@ -90,10 +90,12 @@ public class EventListCommand extends BotAndCallbackCommand {
 			
 			replyMarkup.setKeyboard(keyboardRows);
 			sendMessage.setReplyMarkup(replyMarkup);
-			sendMessage.setText(e.getDescription());
 		}
 		
+		sendMessage.setText(e.getDescription()+addTextForFacebookEvent);
+		
 		sendMessage.setChatId(String.valueOf(callbackQuery.getFrom().getId()));
+		
 		return sendMessage;
 	}
 

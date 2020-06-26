@@ -24,4 +24,21 @@ public class TelegramKeyboard {
 		
 		return replyMarkup;
 	}
+	
+	public static InlineKeyboardMarkup makeOneRowWithLink(String text, String link) {
+		List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<List<InlineKeyboardButton>>();
+		
+		InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
+		List<InlineKeyboardButton> keyboardButtons = null;
+		InlineKeyboardButton inlineKB = null;
+		
+		inlineKB = new InlineKeyboardButton(text);
+		inlineKB.setUrl(link);
+		
+		keyboardButtons = new ArrayList<InlineKeyboardButton>();
+		keyboardButtons.add(inlineKB);
+		keyboardRows.add(keyboardButtons);
+		
+		return replyMarkup;
+	}
 }
