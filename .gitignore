@@ -9,5 +9,6 @@
 .springBeans
 .sts4-cache
 .env
+*.log
 hibernate.properties
 heroku_config_set.bat

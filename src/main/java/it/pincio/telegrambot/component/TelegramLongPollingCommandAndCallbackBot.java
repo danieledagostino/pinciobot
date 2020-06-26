@@ -74,14 +74,18 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 			String[] args = cb.getData().split(CALLBACKDATA_ARGS_SEPARATOR);
 			userId = cb.getFrom().getId();
 			chat = cb.getMessage().getChat();
+			SendMessage sendMessage = null;
 			try {
 				botCommand = getRegisteredCommand(args[0]);
-				SendMessage sendMessage = botCommand.processCallback(cb, args[1]);
+				sendMessage = botCommand.processCallback(cb, args[1]);
 				
 				execute(sendMessage);
 			}catch (NullPointerException e) {
 				log.error("Command {} not implemented yet", args[0]);
 			}catch (TelegramApiException e) {
+				log.error("<sendMessage<");
+				log.error(sendMessage.toString());
+				log.error("</sendMessage>");
 				log.error("Message not sent for the callback", e);
 			}catch (Exception e) {
 				log.error("Generic error during send the message for the callback", e);
