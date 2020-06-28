@@ -98,7 +98,7 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 				log.error("username: {}", cb.getFrom().getUserName());
 				log.error(sendMessage.toString());
 				log.error("</sendMessage>");
-				log.error("TelegramApiException: Message not sent for the callback");
+				log.error("TelegramApiException: Message not sent for the callback", e);
 			} catch (Exception e) {
 				log.error("Generic error during send the message for the callback", e);
 			}
