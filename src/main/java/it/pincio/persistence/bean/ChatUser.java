@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -33,6 +34,10 @@ public class ChatUser implements Serializable {
 			  inverseJoinColumns = @JoinColumn(name = "id_evento"))
 	@JsonIgnore
 	private Set<Event> events;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "chatUser")
+	@JsonIgnore
+	private Set<UserCommand> commands;
 
 	public Integer getId() {
 		return id;
@@ -57,5 +62,12 @@ public class ChatUser implements Serializable {
 	public void setEvents(Set<Event> events) {
 		this.events = events;
 	}
-	
+
+	public Set<UserCommand> getCommands() {
+		return commands;
+	}
+
+	public void setCommands(Set<UserCommand> commands) {
+		this.commands = commands;
+	}
 }

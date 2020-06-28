@@ -1,11 +1,20 @@
 package it.pincio.persistence.bean;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +27,8 @@ public class Command implements Serializable{
 	private static final long serialVersionUID = -6498257175228844443L;
 
 	@Id
+	private Integer id;
+	
 	@Column(name = "nome_comando")
 	private String commandName;
 	
@@ -29,7 +40,29 @@ public class Command implements Serializable{
 	
 	@Column(name = "risposta_privata")
 	private String privateAnswer;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "command")
+	@JsonIgnore
+	private Set<UserCommand> userComands;
 
+	
+	public Command() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Command(Integer id) {
+		this.id = id;
+	}
+	
+	public Command(String commandName) {
+		this.commandName = commandName;
+	}
+	
+	public Command(Integer id, String commandName) {
+		this.id = id;
+		this.commandName = commandName;
+	}
+	
 	public String getCommandName() {
 		return commandName;
 	}

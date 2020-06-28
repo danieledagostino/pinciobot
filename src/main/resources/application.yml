@@ -1,31 +1,6 @@
 # ==============================================================
 # = Pincio Web Service
 # ==============================================================
-logging:
-  level:
-    it.pincio: ERROR
-    ROOT: ERROR
-    org.springframework.boot: ERROR
-    org.springframework.boot.autoconfigure.data: ERROR
-    org.apache: ERROR
-  loggers:
-    "application-info":
-      level: INFO
-      additive: false
-      appenders:
-        - type: file
-          currentLogFilename: /log/application-info.log
-          archivedLogFilenamePattern: /log/application-info%d.log.gz
-          archivedFileCount: 5
-          logFormat: '[%level] %msg%n'
-    "application-error":
-      level: ERROR
-      additive: false
-      appenders:
-        - type: file
-          currentLogFilename: /var/log/application-error.log
-          archivedLogFilenamePattern: /var/log/application-error.log%d.log.gz
-          archivedFileCount: 5
 spring:
   datasource:
     #initialization-mode: always
@@ -57,21 +32,3 @@ spring:
 logging:
   level:
     ROOT: DEBUG
-  loggers:
-    "application-info":
-      level: INFO
-      additive: false
-      appenders:
-        - type: file
-          currentLogFilename: c:/log/application-info.log
-          archivedLogFilenamePattern: c:/log/application-info%d.log.gz
-          archivedFileCount: 5
-          logFormat: '[%level] %msg%n'
-    "application-error":
-      level: ERROR
-      additive: false
-      appenders:
-        - type: file
-          currentLogFilename: c:/var/log/application-error.log
-          archivedLogFilenamePattern: c:/var/log/application-error.log%d.log.gz
-          archivedFileCount: 5
