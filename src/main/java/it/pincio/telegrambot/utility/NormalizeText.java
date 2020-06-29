@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +42,24 @@ public class NormalizeText {
 	    
 	 // load stopwords from file
 	    try {
-	    	List<String> stopwords = Files.readAllLines(Paths.get("/stopwords.txt")); 
+	    	InputStream stopwords = NormalizeText.class.getResourceAsStream("/stopwords.txt");
+	    	List<String> stopwordsList = new ArrayList<String>();
+		    
+		    InputStreamReader isr = new InputStreamReader(stopwords);
+		    BufferedReader br=new BufferedReader(isr);  //creates a buffering character input stream  
+		    String line = null;  
+		    while((line=br.readLine())!=null)  
+		    {  
+		    	stopwordsList.add(line);
+		    }
+		    
+		    isr.close(); 
+		    
 	    	String[] allWords = text.toLowerCase().split(" ");
 	    	
 	    	StringBuilder builder = new StringBuilder();
 	        for(String word : allWords) {
-	            if(!stopwords.contains(word)) {
+	            if(!stopwordsList.contains(word)) {
 	                builder.append(word);
 	                builder.append(' ');
 	            }
