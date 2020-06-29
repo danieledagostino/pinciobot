@@ -84,8 +84,17 @@ public class FaqController {
 	public ResponseEntity<String> faqDetail(@RequestParam("id") String id) {
 		
 		String json = "";
+		if (id == null || "".equals(id)) {
+			log.warn("Warning: given id was not a faq identify");
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 		try {
 			FaqFormBean faq = service.detail(id);
+			if (faq == null) {
+				log.warn("Warning: Faq with id {} not exist", id);
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 			json = jacksonObjectMapper.writeValueAsString(faq);
 		} catch (JsonProcessingException e) {
 			log.error("Error while convert list to json");

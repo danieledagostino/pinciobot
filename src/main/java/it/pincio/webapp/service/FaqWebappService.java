@@ -68,6 +68,7 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 	
 	private Faq toFaq(FaqFormBean bean) {
 		Faq faq = new Faq();
+		faq.setId(Integer.valueOf(bean.getId()));
 		faq.setKeywords(bean.getParole());
 		faq.setHint(bean.getDomanda());
 		faq.setAnswer(bean.getRisposta());
@@ -78,6 +79,7 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 	
 	private FaqFormBean toFormBean(Faq faq) {
 		FaqFormBean bean = new FaqFormBean();
+		bean.setId(String.valueOf(faq.getId()));
 		bean.setParole(faq.getKeywords());
 		bean.setDomanda(faq.getHint());
 		bean.setRisposta(faq.getAnswer());
