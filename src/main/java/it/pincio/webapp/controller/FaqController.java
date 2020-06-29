@@ -81,7 +81,7 @@ public class FaqController {
 	}
 	
 	@GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<String> faqDetail(@RequestParam("id") Integer id) {
+	public ResponseEntity<String> faqDetail(@RequestParam(value = "id") Integer id) {
 		
 		String json = "";
 		try {
@@ -100,7 +100,7 @@ public class FaqController {
 	}
 	
 	@GetMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<String> faqDeete(@RequestParam("id") Integer id) {
+	public ResponseEntity<String> faqDeete(@RequestParam(value = "id") Integer id) {
 		
 		String json = "";
 		try {
