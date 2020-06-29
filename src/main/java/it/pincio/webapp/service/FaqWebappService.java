@@ -31,6 +31,7 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 	public void insert(FaqFormBean object) {
 
 		Faq faq = toFaq(object);
+		faq.setActive("Y");
 		
 		faqRepository.save(faq);
 		
