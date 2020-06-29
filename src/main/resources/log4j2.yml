@@ -10,7 +10,7 @@ Configuration:
     RollingFile:
       - name: infoLog
         fileName: /var/log/application-info.log
-        filePattern: "/var/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz"
+        filePattern: /var/logs/app-%d{MM-dd-yyyy}-%i.log
         PatternLayout:
           pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
         Policies:
@@ -29,6 +29,6 @@ Configuration:
           - ref: infoLog
 
     Root:
-      level: error
+      level: warn
       AppenderRef:
         ref: LogToConsole
