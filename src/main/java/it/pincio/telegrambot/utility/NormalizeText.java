@@ -7,7 +7,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -38,17 +41,25 @@ public class NormalizeText {
 	    
 	 // load stopwords from file
 	    try {
-		    InputStream stopwords = NormalizeText.class.getResourceAsStream("/stopwords.txt");
-		    
-		    InputStreamReader isr = new InputStreamReader(stopwords);
-		    BufferedReader br=new BufferedReader(isr);  //creates a buffering character input stream  
-		    String line = null;  
-		    while((line=br.readLine())!=null)  
-		    {  
-		    	text = text.replaceAll(line, "");
-		    }
-		    
-		    isr.close(); 
+	    	List<String> stopwords = Files.readAllLines(Paths.get("stopwords.txt")); 
+	    	String[] allWords = text.toLowerCase().split(" ");
+	    	
+	    	StringBuilder builder = new StringBuilder();
+	        for(String word : allWords) {
+	            if(!stopwords.contains(word)) {
+	                builder.append(word);
+	                builder.append(' ');
+	            }
+	        }
+	         
+	        text = builder.toString().trim();
+	        
+	        /*
+	        String stopwordsRegex = stopwords.stream()
+    	      .collect(Collectors.joining("|", "\\b(", ")\\b\\s?"));
+    	 
+    	    text = original.toLowerCase().replaceAll(stopwordsRegex, "");
+    	    */
 	    }catch (Exception e) {
 			log.error("stopwords.txt not loaded", e);
 		}
