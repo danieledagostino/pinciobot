@@ -8,10 +8,10 @@ public interface GenericCrudService<T> {
 	
 	public void insert(T object);
 	
-	public boolean delete(String id);
+	public boolean delete(Integer id);
 	
 	public List<T> list();
 	
-	public T detail(String id);
+	public T detail(Integer id);
 
 }

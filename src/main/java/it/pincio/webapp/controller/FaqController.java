@@ -81,14 +81,9 @@ public class FaqController {
 	}
 	
 	@GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<String> faqDetail(@RequestParam("id") String id) {
+	public ResponseEntity<String> faqDetail(@RequestParam("id") Integer id) {
 		
 		String json = "";
-		if (id == null || "".equals(id)) {
-			log.warn("Warning: given id was not a faq identify");
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
 		try {
 			FaqFormBean faq = service.detail(id);
 			if (faq == null) {
@@ -97,7 +92,21 @@ public class FaqController {
 			}
 			json = jacksonObjectMapper.writeValueAsString(faq);
 		} catch (JsonProcessingException e) {
-			log.error("Error while convert list to json");
+			log.error("Error while detail request");
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<String> faqDeete(@RequestParam("id") Integer id) {
+		
+		String json = "";
+		try {
+			service.delete(id);
+		} catch (Exception e) {
+			log.error("Error while deleting the faq");
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		

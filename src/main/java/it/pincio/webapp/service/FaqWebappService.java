@@ -38,9 +38,9 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 	}
 
 	@Override
-	public boolean delete(String id) {
+	public boolean delete(Integer id) {
 		try {
-			faqRepository.deleteById(Integer.valueOf(id));
+			faqRepository.deleteById(id);
 			return true;
 		}catch(Exception e) {
 			log.error("Error during deletion", e);
@@ -56,9 +56,9 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 	}
 
 	@Override
-	public FaqFormBean detail(String id) {
+	public FaqFormBean detail(Integer id) {
 		try {
-			Faq faq = faqRepository.getOne(Integer.valueOf(id));
+			Faq faq = faqRepository.getOne(id);
 			return toFormBean(faq);
 		}catch(NumberFormatException e) {
 			log.error("Error during convertion of a number froma string", e);
