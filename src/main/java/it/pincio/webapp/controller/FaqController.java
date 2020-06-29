@@ -54,7 +54,15 @@ public class FaqController {
 	@PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> update(@ModelAttribute FaqFormBean request) {
 		
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			service.update(request);
+			
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Faq not updated", e);
+			
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -66,15 +74,25 @@ public class FaqController {
 			json = jacksonObjectMapper.writeValueAsString(faqLisr);
 		} catch (JsonProcessingException e) {
 			log.error("Error while convert list to json");
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/detail/{id}", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<String> faqDetail(@RequestParam("id") String id) {
 		
-		return new ResponseEntity<>(HttpStatus.OK);
+		String json = "";
+		try {
+			FaqFormBean faq = service.detail(id);
+			json = jacksonObjectMapper.writeValueAsString(faq);
+		} catch (JsonProcessingException e) {
+			log.error("Error while convert list to json");
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 	
 }

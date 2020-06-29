@@ -17,7 +17,7 @@ public class Faq implements Serializable{
 	private static final long serialVersionUID = -3047990182101512244L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	private String keywords;

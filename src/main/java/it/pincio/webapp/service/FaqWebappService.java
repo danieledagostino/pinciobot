@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import it.pincio.persistence.bean.Faq;
 import it.pincio.persistence.dao.FaqRepository;
 import it.pincio.webapp.formbean.FaqFormBean;
+import javassist.bytecode.stackmap.BasicBlock.Catch;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 	
 	@Autowired
@@ -19,8 +22,9 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 
 	@Override
 	public void update(FaqFormBean object) {
-		// TODO Auto-generated method stub
+		Faq faq = toFaq(object);
 		
+		faqRepository.save(faq);
 	}
 
 	@Override
@@ -33,9 +37,14 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 	}
 
 	@Override
-	public void delete(String id) {
-		// TODO Auto-generated method stub
-		
+	public boolean delete(String id) {
+		try {
+			faqRepository.deleteById(Integer.valueOf(id));
+			return true;
+		}catch(Exception e) {
+			log.error("Error during deletion", e);
+			return false;
+		}
 	}
 
 	@Override
@@ -46,9 +55,14 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 	}
 
 	@Override
-	public void detail(String id) {
-		// TODO Auto-generated method stub
-		
+	public FaqFormBean detail(String id) {
+		try {
+			Faq faq = faqRepository.getOne(Integer.valueOf(id));
+			return toFormBean(faq);
+		}catch(NumberFormatException e) {
+			log.error("Error during convertion of a number froma string", e);
+			return null;
+		}
 	}
 	
 	private Faq toFaq(FaqFormBean bean) {
