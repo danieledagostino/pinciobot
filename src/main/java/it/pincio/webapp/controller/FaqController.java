@@ -57,7 +57,7 @@ public class FaqController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<String> faqList(@RequestParam(value = "filter", required=false) String filter) {
 		
 		String json = "";
