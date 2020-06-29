@@ -1,5 +1,6 @@
 package it.pincio.webapp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -25,9 +26,7 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 	@Override
 	public void insert(FaqFormBean object) {
 
-		Faq faq = new Faq();
-		
-		copyTo(faq, object);
+		Faq faq = toFaq(object);
 		
 		faqRepository.save(faq);
 		
@@ -41,8 +40,9 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 
 	@Override
 	public List<FaqFormBean> list() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Faq> list = faqRepository.findAll();
+		
+		return copyTo(list);
 	}
 
 	@Override
@@ -51,11 +51,32 @@ public class FaqWebappService implements GenericCrudService<FaqFormBean>{
 		
 	}
 	
-	private void copyTo(Faq faq, FaqFormBean bean) {
+	private Faq toFaq(FaqFormBean bean) {
+		Faq faq = new Faq();
 		faq.setKeywords(bean.getParole());
 		faq.setHint(bean.getDomanda());
 		faq.setAnswer(bean.getRisposta());
 		faq.setActive(bean.getAttivo());
+		
+		return faq;
+	}
+	
+	private FaqFormBean toFormBean(Faq faq) {
+		FaqFormBean bean = new FaqFormBean();
+		bean.setParole(faq.getKeywords());
+		bean.setDomanda(faq.getHint());
+		bean.setRisposta(faq.getAnswer());
+		bean.setAttivo(faq.getActive());
+		
+		return bean;
+	}
+	
+	private List<FaqFormBean> copyTo(List<Faq> list) {
+		List<FaqFormBean> result = new ArrayList<FaqFormBean>();
+		
+		list.forEach(faq -> result.add(toFormBean(faq)));
+		
+		return result;
 	}
 
 }
