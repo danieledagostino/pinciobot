@@ -32,3 +32,4 @@ spring:
 logging:
   level:
     ROOT: DEBUG
+    org.springframework.boot.autoconfigure: ERROR
