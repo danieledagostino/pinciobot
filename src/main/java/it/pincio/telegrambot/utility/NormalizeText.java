@@ -41,7 +41,7 @@ public class NormalizeText {
 	    
 	 // load stopwords from file
 	    try {
-	    	List<String> stopwords = Files.readAllLines(Paths.get("stopwords.txt")); 
+	    	List<String> stopwords = Files.readAllLines(Paths.get("/stopwords.txt")); 
 	    	String[] allWords = text.toLowerCase().split(" ");
 	    	
 	    	StringBuilder builder = new StringBuilder();
