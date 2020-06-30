@@ -109,8 +109,10 @@ public class FloodControlCommandRegistry implements ICommandRegistry {
 					
 						String[] parameters = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
 						commandRegistryMap.get(command).processMessage(absSender, message, parameters);
+						return true;
+					} else {
+						return false;
 					}
-					return true;
 				} else if (defaultConsumer != null) {
 					defaultConsumer.accept(absSender, message);
 					return true;
