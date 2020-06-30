@@ -9,8 +9,19 @@ Configuration:
 
     RollingFile:
       - name: infoLog
-        fileName: /var/log/application-info.log
-        filePattern: /var/logs/app-%d{MM-dd-yyyy}-%i.log
+        fileName: ${user.dir}/log/application-info.log
+        filePattern: ${user.dir}/logs/app-info-%d{MM-dd-yyyy}-%i.log
+        PatternLayout:
+          pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: 10MB
+        DefaultRollOverStrategy:
+          max: 10
+    RollingFile:
+      - name: infoError
+        fileName: ${user.dir}/log/application-error.log
+        filePattern: ${user.dir}/logs/app-err-%d{MM-dd-yyyy}-%i.log
         PatternLayout:
           pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
         Policies:
@@ -27,6 +38,12 @@ Configuration:
         AppenderRef:
           - ref: LogToConsole
           - ref: infoLog
+    logger:
+      - name: it.pincio
+        level: error
+        additivity: false
+        AppenderRef:
+          - ref: infoError
 
     Root:
       level: warn
