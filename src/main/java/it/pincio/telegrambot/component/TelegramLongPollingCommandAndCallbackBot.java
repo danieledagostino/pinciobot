@@ -68,7 +68,8 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 //						!botCommand.isPrivateAnswer() && !chat.getId().equals(new Long(userId))) {
 //					canExecuteCommand = true;
 //				}
-				if (!(canExecuteCommand && commandRegistry.executeCommand(this, message))) {
+				//if (!(canExecuteCommand && commandRegistry.executeCommand(this, message))) {
+				if (!commandRegistry.executeCommand(this, message)) {
 					// we have received a not registered command, handle it as invalid
 					//processInvalidCommandUpdate(update);
 					
