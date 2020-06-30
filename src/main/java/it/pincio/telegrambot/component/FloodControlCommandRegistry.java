@@ -20,7 +20,7 @@ public class FloodControlCommandRegistry implements ICommandRegistry {
 	private final boolean allowCommandsWithUsername;
 	private final String botUsername;
 	private BiConsumer<AbsSender, Message> defaultConsumer;
-	private final long TIME_TO_WAIT_FOR_PREVENTING_FLOOD = 120; //Represented with seconds
+	private final long TIME_TO_WAIT_FOR_PREVENTING_FLOOD = 180; //Represented with seconds
 	private Map<String, LocalDateTime> commandFoodControl;
 
 	/**

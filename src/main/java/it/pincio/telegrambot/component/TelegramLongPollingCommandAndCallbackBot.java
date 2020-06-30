@@ -22,6 +22,7 @@ import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.ICommandRegistry;
 import org.telegram.telegrambots.meta.ApiContext;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -57,14 +58,25 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 		BotAndCallbackCommand botCommand = null;
 		Integer messageId = null;
 		boolean isValidCommand = false;
+		boolean canExecuteCommand = false;
 		if (update.hasMessage()) {
 			userId = update.getMessage().getFrom().getId();
 			chat = update.getMessage().getChat();
 			message = update.getMessage();
 			if (message.isCommand() && !filter(message)) {
-				if (!commandRegistry.executeCommand(this, message)) {
+//				if (botCommand.isPrivateAnswer() && chat.getId().equals(new Long(userId)) ||
+//						!botCommand.isPrivateAnswer() && !chat.getId().equals(new Long(userId))) {
+//					canExecuteCommand = true;
+//				}
+				if (!(canExecuteCommand && commandRegistry.executeCommand(this, message))) {
 					// we have received a not registered command, handle it as invalid
-					processInvalidCommandUpdate(update);
+					//processInvalidCommandUpdate(update);
+					
+					try {
+						execute(new DeleteMessage(chat.getId(), message.getMessageId()));
+					} catch (TelegramApiException e) {
+						log.error("Error while deleting a non command update message", e);
+					}
 				} else {
 					isValidCommand = true;
 					String text = message.getText();
