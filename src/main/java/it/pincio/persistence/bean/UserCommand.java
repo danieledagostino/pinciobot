@@ -33,7 +33,7 @@ public class UserCommand implements Serializable {
 	private Command command;
 	
 	@DateTimeFormat
-	@Column(name = "data_insrimento")
+	@Column(name = "data_inserimento")
 	private Date insertDate;
 	
 	@Column(name = "messaggio_in")
