@@ -120,7 +120,7 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 		}
 
 		//if (isValidCommand || update.hasCallbackQuery()) {
-		if (botCommand.isPrivateAnswer() && !chat.isUserChat()) {
+		if (botCommand != null && botCommand.isPrivateAnswer() && !chat.isUserChat()) {
 			InlineKeyboardMarkup replyMarkup = TelegramKeyboard.makeOneRowWithLink("Premi qui",
 					"https://t.me/" + USER_BOT);
 //				SendMessage privateMessage = new SendMessage().setChatId(chat.getId()).setReplyMarkup(replyMarkup)
