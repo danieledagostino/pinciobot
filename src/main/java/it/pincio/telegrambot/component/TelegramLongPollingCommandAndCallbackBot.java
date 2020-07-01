@@ -21,6 +21,7 @@ import org.telegram.telegrambots.extensions.bots.commandbot.commands.CommandRegi
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.ICommandRegistry;
 import org.telegram.telegrambots.meta.ApiContext;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -78,17 +79,17 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 					} catch (TelegramApiException e) {
 						log.error("Error while deleting a non command update message", e);
 					}
-				} else {
-					isValidCommand = true;
-					String text = message.getText();
-					String commandMessage = text.substring(1);
-					String[] commandSplit = commandMessage.split(BotCommand.COMMAND_PARAMETER_SEPARATOR_REGEXP);
-
-					String command = removeUsernameFromCommandIfNeeded(commandSplit[0]);
-					botCommand = getRegisteredCommand(command);
-
-					log.info("Invoking command {}", command);
 				}
+				isValidCommand = true;
+				String text = message.getText();
+				String commandMessage = text.substring(1);
+				String[] commandSplit = commandMessage.split(BotCommand.COMMAND_PARAMETER_SEPARATOR_REGEXP);
+
+				String command = removeUsernameFromCommandIfNeeded(commandSplit[0]);
+				botCommand = getRegisteredCommand(command);
+
+				log.info("Invoking command {}", command);
+				
 				messageId = message.getMessageId();
 			}
 		} else if (update.hasCallbackQuery()) {
@@ -118,24 +119,32 @@ public abstract class TelegramLongPollingCommandAndCallbackBot extends DefaultAb
 
 		}
 
-		if (isValidCommand || update.hasCallbackQuery()) {
-			if (botCommand.isPrivateAnswer() && !chat.getId().equals(new Long(userId))) {
-				InlineKeyboardMarkup replyMarkup = TelegramKeyboard.makeOneRowWithLink("Premi qui",
-						"https://t.me/" + USER_BOT);
-				SendMessage privateMessage = new SendMessage().setChatId(chat.getId()).setReplyMarkup(replyMarkup)
-						.setReplyToMessageId(messageId).setText(messageSource.getMessage("command.msg.touser",
-								Arrays.asList(botCommand.getCommandIdentifier()).toArray(), Locale.ITALY));
-				try {
-					execute(privateMessage);
-				} catch (TelegramApiException e) {
-					log.error("Private message to inform the user not sent", e);
-				} catch (Exception e) {
-					log.error("Generic error during send the message if the chat comes from public group", e);
-				}
+		//if (isValidCommand || update.hasCallbackQuery()) {
+		if (botCommand.isPrivateAnswer() && !chat.isUserChat()) {
+			InlineKeyboardMarkup replyMarkup = TelegramKeyboard.makeOneRowWithLink("Premi qui",
+					"https://t.me/" + USER_BOT);
+//				SendMessage privateMessage = new SendMessage().setChatId(chat.getId()).setReplyMarkup(replyMarkup)
+//						.setReplyToMessageId(messageId).setText(messageSource.getMessage("command.msg.touser",
+//								Arrays.asList(botCommand.getCommandIdentifier()).toArray(), Locale.ITALY));
+			try {
+				AnswerCallbackQuery acq = new AnswerCallbackQuery();
+				acq.setCallbackQueryId(update.getCallbackQuery().getId());
+				acq.setText(messageSource.getMessage("command.msg.touser",
+							Arrays.asList(botCommand.getCommandIdentifier()).toArray(), Locale.ITALY));
+				acq.setShowAlert(true);
+				//execute(privateMessage);
+				execute(acq);
+			} catch (TelegramApiException e) {
+				log.error("Private message to inform the user not sent", e);
+			} catch (Exception e) {
+				log.error("Generic error during send the message if the chat comes from public group", e);
 			}
-			return;
 		}
 
+		if (update.hasCallbackQuery()) {
+			return;
+		}
+		
 		processNonCommandUpdate(update);
 	}
 

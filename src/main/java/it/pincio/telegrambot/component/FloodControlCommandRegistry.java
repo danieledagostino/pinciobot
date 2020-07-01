@@ -12,8 +12,11 @@ import java.util.regex.Pattern;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.ICommandRegistry;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+
+import it.pincio.telegrambot.command.BotAndCallbackCommand;
 
 public class FloodControlCommandRegistry implements ICommandRegistry {
 	private final Map<String, IBotCommand> commandRegistryMap = new HashMap<>();
@@ -96,7 +99,10 @@ public class FloodControlCommandRegistry implements ICommandRegistry {
 	 * @return True if a command or default action is executed, false otherwise
 	 */
 	public final boolean executeCommand(AbsSender absSender, Message message) {
+		BotAndCallbackCommand botCommand = null;
+		Chat chat = null;
 		if (message.hasText()) {
+			chat = message.getChat();
 			String text = message.getText();
 			if (text.startsWith(BotCommand.COMMAND_INIT_CHARACTER)) {
 				String commandMessage = text.substring(1);
@@ -105,11 +111,16 @@ public class FloodControlCommandRegistry implements ICommandRegistry {
 				String command = removeUsernameFromCommandIfNeeded(commandSplit[0]);
 
 				if (commandRegistryMap.containsKey(command)) {
-					if (floodManagerPermitThisCommand(command)) {
+					if (chat.isUserChat() || floodManagerPermitThisCommand(command)) {
 					
-						String[] parameters = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
-						commandRegistryMap.get(command).processMessage(absSender, message, parameters);
-						return true;
+						botCommand = (BotAndCallbackCommand)getRegisteredCommand(command);
+						if ((botCommand.isPrivateAnswer() && chat.isUserChat()) || !botCommand.isPrivateAnswer()) {
+							String[] parameters = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
+							commandRegistryMap.get(command).processMessage(absSender, message, parameters);
+							return true;
+						} else {
+							return false;
+						}
 					} else {
 						return false;
 					}
