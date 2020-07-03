@@ -3,9 +3,7 @@ package it.pincio.telegrambot.command;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.extensions.bots.commandbot.commands.DefaultBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
@@ -13,7 +11,9 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import it.pincio.persistence.bean.Event;
 import it.pincio.telegrambot.service.EventService;
+import it.pincio.telegrambot.utility.TelegramKeyboard;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -34,12 +34,15 @@ public class EventAddCommand extends BotAndCallbackCommand {
 	@Override
 	public void execute(AbsSender absSender, User user, Chat chat, Integer messageId, String[] arguments) {
 		
-		String returnMessage = eventService.processRequest(String.valueOf(user.getId()), arguments);
+		
+		Event event = eventService.generateEmptyEvent(user.getId());
+		
+		String text = "Premi sul pulsante";
 		
 		SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
                 .setChatId(chat.getId())
-                .setReplyToMessageId(messageId)
-                .setText(returnMessage);
+                .setReplyMarkup(TelegramKeyboard.makeOneRowWithLink("Crea evento", "http://pinciogames.altervista.org/evento.php?token="+event.getToken()))
+                .setText(text);
         try {
         	absSender.execute(message); // Call method to send the message
         } catch (TelegramApiException e) {

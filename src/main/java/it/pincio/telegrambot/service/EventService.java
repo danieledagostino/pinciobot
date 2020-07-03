@@ -31,6 +31,7 @@ import it.pincio.persistence.dao.EventRepository;
 import it.pincio.telegrambot.dto.EventDto;
 import it.pincio.telegrambot.utility.EmojiiCode;
 import it.pincio.telegrambot.utility.TelegramKeyboard;
+import it.pincio.telegrambot.utility.Utility;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -132,6 +133,25 @@ public class EventService {
 		}
 		
 		return returnMessage;
+	}
+	
+	public Event generateEmptyEvent(Integer userId) {
+		
+		String token = Utility.randomAlphaNumeric(20);
+		
+		Event event = new Event();
+		event.setOwner(new ChatUser(userId));
+		event.setToken(token);
+		event.setCancelled("Y");
+		
+		try {
+			event = eventRepository.save(event);
+			return event;
+		} catch (Exception e) {
+			log.error("Error during creation of a new empy event", e);
+			return null;
+		}
+		
 	}
 	
 	@Transactional

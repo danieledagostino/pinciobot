@@ -86,6 +86,9 @@ public class Event implements Serializable{
 	@ManyToMany(mappedBy = "events", fetch = FetchType.LAZY)
 	@JsonIgnore
 	Set<ChatUser> participants;
+	
+	@Column(name = "token")
+	private String token;
 
 	public Integer getId() {
 		return id;
@@ -189,6 +192,14 @@ public class Event implements Serializable{
 
 	public void setParticipants(Set<ChatUser> participants) {
 		this.participants = participants;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 }
