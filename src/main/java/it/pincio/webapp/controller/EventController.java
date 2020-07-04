@@ -1,5 +1,9 @@
 package it.pincio.webapp.controller;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -44,6 +48,21 @@ public class EventController {
 	public ResponseEntity<String> newFaq(@RequestBody EventFormBean request) {
 		
 		try {
+			if (request.getStartTime() == null) {
+				LocalDateTime localDateTime = LocalDateTime.of(
+						request.getStartDateYear(), 
+						Month.of(request.getStartDateMonth()),
+						request.getStartDateDay(),
+						request.getStartTimeHour(),
+						request.getStartTimeMinute(),
+						0);
+				Date startTime = Date
+					      .from(localDateTime.atZone(ZoneId.systemDefault())
+					    	      .toInstant());
+				
+				request.setStartTime(startTime);
+			}
+			
 			service.insert(request);
 			
 			return new ResponseEntity<>(HttpStatus.OK);

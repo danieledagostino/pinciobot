@@ -43,12 +43,12 @@ public class EventFormBean implements Serializable {
 	@JsonProperty("token")
 	private String token;
 	
-	private String startDateDay;
-	private String startDateMonth;
-	private String startDateYear;
+	private Integer startDateDay;
+	private Integer startDateMonth;
+	private Integer startDateYear;
 	
-	private String startTimeHour;
-	private String startTimeMinute;
+	private Integer startTimeHour;
+	private Integer startTimeMinute;
 
 	public String getName() {
 		return name;
@@ -138,43 +138,43 @@ public class EventFormBean implements Serializable {
 		this.token = token;
 	}
 
-	public String getStartDateDay() {
+	public Integer getStartDateDay() {
 		return startDateDay;
 	}
 
-	public void setStartDateDay(String startDateDay) {
+	public void setStartDateDay(Integer startDateDay) {
 		this.startDateDay = startDateDay;
 	}
 
-	public String getStartDateMonth() {
+	public Integer getStartDateMonth() {
 		return startDateMonth;
 	}
 
-	public void setStartDateMonth(String startDateMonth) {
+	public void setStartDateMonth(Integer startDateMonth) {
 		this.startDateMonth = startDateMonth;
 	}
 
-	public String getStartDateYear() {
+	public Integer getStartDateYear() {
 		return startDateYear;
 	}
 
-	public void setStartDateYear(String startDateYear) {
+	public void setStartDateYear(Integer startDateYear) {
 		this.startDateYear = startDateYear;
 	}
 
-	public String getStartTimeHour() {
+	public Integer getStartTimeHour() {
 		return startTimeHour;
 	}
 
-	public void setStartTimeHour(String startTimeHour) {
+	public void setStartTimeHour(Integer startTimeHour) {
 		this.startTimeHour = startTimeHour;
 	}
 
-	public String getStartTimeMinute() {
+	public Integer getStartTimeMinute() {
 		return startTimeMinute;
 	}
 
-	public void setStartTimeMinute(String startTimeMinute) {
+	public void setStartTimeMinute(Integer startTimeMinute) {
 		this.startTimeMinute = startTimeMinute;
 	}
 }
