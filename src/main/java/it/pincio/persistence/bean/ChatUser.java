@@ -38,6 +38,13 @@ public class ChatUser implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "chatUser")
 	@JsonIgnore
 	private Set<UserCommand> commands;
+	
+	public ChatUser() {
+	}
+	
+	public ChatUser(Integer id) {
+		this.id = id;
+	}
 
 	public Integer getId() {
 		return id;

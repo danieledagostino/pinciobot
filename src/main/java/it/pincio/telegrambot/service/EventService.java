@@ -138,9 +138,11 @@ public class EventService {
 	public Event generateEmptyEvent(Integer userId) {
 		
 		String token = Utility.randomAlphaNumeric(20);
+		ChatUser owner = new ChatUser();
+		owner.setId(userId);
 		
 		Event event = new Event();
-		event.setOwner(new ChatUser(userId));
+		event.setOwner(owner);
 		event.setToken(token);
 		event.setCancelled("Y");
 		
@@ -148,7 +150,7 @@ public class EventService {
 			event = eventRepository.save(event);
 			return event;
 		} catch (Exception e) {
-			log.error("Error during creation of a new empy event", e);
+			log.error("Error during creation of a new empty event", e);
 			return null;
 		}
 		
