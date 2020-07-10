@@ -2,7 +2,7 @@ package it.pincio.telegrambot.utility;
 
 public class Utility {
 
-	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghilmnopqrstuvz!@#$&%";
+	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghilmnopqrstuvz!?$";
 
 	public static String randomAlphaNumeric(int count) {
 		StringBuilder builder = new StringBuilder();
