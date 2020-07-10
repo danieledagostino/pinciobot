@@ -22,6 +22,7 @@ public class TelegramKeyboard {
 		keyboardButtons.add(inlineKB);
 		keyboardRows.add(keyboardButtons);
 		
+		replyMarkup.setKeyboard(keyboardRows);
 		return replyMarkup;
 	}
 	
@@ -39,6 +40,7 @@ public class TelegramKeyboard {
 		keyboardButtons.add(inlineKB);
 		keyboardRows.add(keyboardButtons);
 		
+		replyMarkup.setKeyboard(keyboardRows);
 		return replyMarkup;
 	}
 }
