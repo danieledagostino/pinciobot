@@ -25,10 +25,33 @@ spring:
           lob:
             non_contextual_creation: true
     show-sql: false
+  cache:
+    ehcache:
+      config: classpath:ehcache.xml
   
 ---
+server:
+  port: 8081
 spring:
   profiles: local
+  #h2:
+  #  console:
+  #    enabled: true
+  #datasource:
+  #  password:
+  #  platform: h2
+  #  #url: jdbc:h2:mem:moviemng;DB_CLOSE_DELAY=-1
+  #  url: jdbc:h2:file:${user.home}\pinciotelegramdb
+  #  username: sa
+  #  driverClassName: org.h2.Driver
+  #jpa:
+  #  hibernate:
+  #    ddl-auto: none
+  #  properties:
+  #    hibernate:
+  #      format_sql: true
+  #      dialect: org.hibernate.dialect.H2Dialect
+  #  show-sql: true
 logging:
   level:
     ROOT: DEBUG
