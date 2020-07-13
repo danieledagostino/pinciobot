@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -36,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "events")
 public class EventService {
 	
 	@Autowired
@@ -157,6 +160,7 @@ public class EventService {
 	}
 	
 	@Transactional
+	@Cacheable
 	public List<EventDto> searchCurrentEvents() {
 		return toDto(eventRepository.searchCurrentEvents());
 	}
@@ -205,12 +209,14 @@ public class EventService {
 	}
 	
 	@Transactional
+	@Cacheable
 	public EventDto findById(Integer id) {
 		Optional<Event> e = eventRepository.findById(id);
 		return toDto(e.get());
 	}
 	
 	@Transactional
+	@Cacheable
 	public EventDto searchNextEvent() throws Exception {
 		Page<Event> page = eventRepository.searchNextEvent(PageRequest.of(0, 1));
 		
